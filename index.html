@@ -1,0 +1,1646 @@
+<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
+<title>Laboratorio de Presupuesto e Inversión Pública</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600&family=Space+Grotesk:wght@500;600;700&display=swap">
+<style>
+/* Layout: encabezado fijo con pestañas; cada unidad = banda de título + teoría en pestañas + simuladores como paneles de trabajo */
+:root{
+  --bg:#F1F4F5; --surface:#FFFFFF; --surface-2:#E8EDEF; --ink:#13181B; --muted:#56616A; --line:#D3DADE;
+  --accent:#FFB400; --accent-ink:#231800; --accent-soft:#FFF0C7; --accent-text:#8A5A00;
+  --teal:#0E7573; --teal-soft:#D6EEEC;
+  --good:#2D8650; --good-soft:#DCF0E3; --warn:#B87700; --warn-soft:#FAEACB; --crit:#BF3A2F; --crit-soft:#F7DDDA;
+  --font-display:"Space Grotesk","Segoe UI",system-ui,sans-serif;
+  --font-body:"Inter","Segoe UI",system-ui,-apple-system,sans-serif;
+  --font-mono:"JetBrains Mono",ui-monospace,"SFMono-Regular",Menlo,Consolas,monospace;
+  --band:#13181B; --band-ink:#F2F5F6;
+  --r:12px; --shadow:0 1px 2px rgba(19,24,27,.06),0 6px 20px rgba(19,24,27,.06);
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#0E1215; --surface:#161B1F; --surface-2:#1F262B; --ink:#E9EEF0; --muted:#9AA6AF; --line:#2B343A;
+  --accent:#FFC233; --accent-ink:#1E1500; --accent-soft:#3A2E0E; --accent-text:#FFC94D;
+  --teal:#3DB5AE; --teal-soft:#123331;
+  --good:#4FBF7C; --good-soft:#15301F; --warn:#E3A62C; --warn-soft:#352812; --crit:#EE6A5E; --crit-soft:#3A1916;
+  --band:#080B0D; --band-ink:#E9EEF0; --shadow:0 1px 2px rgba(0,0,0,.4),0 6px 20px rgba(0,0,0,.25); color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#0E1215; --surface:#161B1F; --surface-2:#1F262B; --ink:#E9EEF0; --muted:#9AA6AF; --line:#2B343A;
+  --accent:#FFC233; --accent-ink:#1E1500; --accent-soft:#3A2E0E; --accent-text:#FFC94D;
+  --teal:#3DB5AE; --teal-soft:#123331;
+  --good:#4FBF7C; --good-soft:#15301F; --warn:#E3A62C; --warn-soft:#352812; --crit:#EE6A5E; --crit-soft:#3A1916;
+  --band:#080B0D; --band-ink:#E9EEF0; --shadow:0 1px 2px rgba(0,0,0,.4),0 6px 20px rgba(0,0,0,.25); color-scheme:dark}
+
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--ink);font-family:var(--font-body);font-size:15px;line-height:1.55}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:30;background:var(--surface)}
+h1,h2,h3,h4{font-family:var(--font-display);line-height:1.15;margin:0;text-wrap:balance;letter-spacing:-.01em}
+p{margin:0}
+a{color:var(--teal)}
+button,input,select,textarea{font:inherit;color:inherit}
+:focus-visible{outline:3px solid var(--accent);outline-offset:2px;border-radius:6px}
+.num,.mono{font-family:var(--font-mono);font-variant-numeric:tabular-nums}
+
+/* ---------- encabezado ---------- */
+.top{position:sticky;top:env(safe-area-inset-top,0px);z-index:20;background:var(--surface);border-bottom:1px solid var(--line)}
+.top-inner{max-width:1200px;margin:0 auto;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:10px 0;display:flex;flex-direction:column;gap:8px}
+.brand{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.mark{width:30px;height:30px;border-radius:7px;background:var(--band);display:grid;place-items:center;flex:none}
+.mark i{display:block;width:6px;height:16px;background:var(--accent);margin:0 1.5px;border-radius:1px}
+.mark span{display:flex}
+.brand b{font-family:var(--font-display);font-size:16px}
+.brand small{color:var(--muted);font-size:12.5px}
+.tabs-nav{display:flex;gap:2px;overflow-x:auto;scrollbar-width:none;margin:0 -4px}
+.tabs-nav::-webkit-scrollbar{display:none}
+.tabs-nav a{flex:none;text-decoration:none;color:var(--muted);font-weight:600;font-size:13.5px;padding:9px 12px 11px;border-bottom:3px solid transparent;white-space:nowrap}
+.tabs-nav a:hover{color:var(--ink)}
+.tabs-nav a[aria-current="page"]{color:var(--ink);border-bottom-color:var(--accent)}
+.tabs-nav a .u{font-family:var(--font-mono);font-size:11px;color:var(--muted);margin-right:4px}
+
+main{max-width:1200px;margin:0 auto;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:24px 64px}
+section[data-view]{display:flex;flex-direction:column;gap:28px}
+
+/* ---------- piezas comunes ---------- */
+.eyebrow{font-size:12px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--accent-text)}
+.lead{font-size:17px;color:var(--muted);max-width:62ch}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:20px}
+.panel{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);box-shadow:var(--shadow);overflow:hidden}
+.panel-head{padding:18px 20px 14px;border-bottom:1px solid var(--line);display:flex;gap:12px;align-items:flex-start;justify-content:space-between;flex-wrap:wrap}
+.panel-head h3{font-size:20px}
+.panel-head p{color:var(--muted);font-size:14px;max-width:70ch;margin-top:4px}
+.panel-body{padding:18px 20px;display:flex;flex-direction:column;gap:16px}
+.tag{display:inline-flex;align-items:center;gap:6px;font-size:12px;font-weight:600;padding:3px 9px;border-radius:999px;background:var(--surface-2);color:var(--muted);white-space:nowrap}
+.tag.sim{background:var(--accent-soft);color:var(--accent-text)}
+.tag.ilu{background:var(--surface-2)}
+.grid2{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,320px),1fr));gap:16px}
+.grid3{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,240px),1fr));gap:14px}
+.grid4{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,200px),1fr));gap:12px}
+.split{display:grid;grid-template-columns:minmax(0,1.25fr) minmax(0,1fr);gap:18px;align-items:start}
+@media (max-width:900px){.split{grid-template-columns:minmax(0,1fr)}}
+.mini h4{font-size:15.5px;margin-bottom:4px}
+.mini p{color:var(--muted);font-size:14px}
+.mini{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:14px 16px;display:flex;flex-direction:column;gap:2px;min-width:0}
+.mini .k{font-family:var(--font-mono);font-size:11.5px;color:var(--accent-text);font-weight:600;letter-spacing:.04em}
+ul.clean{margin:0;padding-left:18px;display:flex;flex-direction:column;gap:4px}
+.note{font-size:13px;color:var(--muted)}
+.callout{display:flex;gap:12px;align-items:flex-start;background:var(--accent-soft);border-radius:10px;padding:12px 14px;font-size:14px}
+.callout b{color:var(--accent-text)}
+.callout.teal{background:var(--teal-soft)}
+.callout.teal b{color:var(--teal)}
+.callout .ic{flex:none;width:26px;height:26px;border-radius:50%;background:var(--band);color:var(--accent);display:grid;place-items:center;font-weight:700;font-size:13px;font-family:var(--font-display)}
+.insight{border-left:4px solid var(--accent);background:var(--surface-2);padding:10px 14px;border-radius:0 8px 8px 0;font-size:14.5px}
+.insight b{font-weight:700}
+
+/* botones y controles */
+.btn{display:inline-flex;align-items:center;gap:8px;border:1px solid var(--line);background:var(--surface);padding:8px 14px;border-radius:9px;font-weight:600;font-size:14px;cursor:pointer;text-decoration:none;color:var(--ink)}
+.btn:hover{border-color:var(--muted)}
+.btn.primary{background:var(--accent);border-color:var(--accent);color:var(--accent-ink)}
+.btn.primary:hover{filter:brightness(.96)}
+.btn.dark{background:var(--ink);border-color:var(--ink);color:var(--surface)}
+.btn.sm{padding:5px 10px;font-size:13px}
+.btns{display:flex;gap:8px;flex-wrap:wrap}
+.seg{display:inline-flex;background:var(--surface-2);border-radius:10px;padding:3px;gap:2px;flex-wrap:wrap}
+.seg button{border:0;background:transparent;padding:6px 12px;border-radius:8px;font-weight:600;font-size:13.5px;cursor:pointer;color:var(--muted)}
+.seg button[aria-pressed="true"]{background:var(--surface);color:var(--ink);box-shadow:var(--shadow)}
+label.fld{display:flex;flex-direction:column;gap:5px;font-size:13px;font-weight:600;color:var(--muted);min-width:0}
+input[type=text],input[type=number],select,textarea{background:var(--surface);border:1px solid var(--line);border-radius:8px;padding:7px 10px;font-size:14px;width:100%;min-width:0}
+textarea{resize:vertical;min-height:62px;line-height:1.45}
+input[type=number]{font-family:var(--font-mono)}
+input[type=range]{width:100%;accent-color:var(--accent)}
+.range-row{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:4px 12px;align-items:center}
+.range-row output{font-family:var(--font-mono);font-weight:600;font-size:14px}
+
+/* pestañas internas */
+.ttabs{display:flex;gap:6px;flex-wrap:wrap;padding:14px 20px 0}
+.ttabs button{border:1px solid var(--line);background:var(--surface);border-radius:999px;padding:6px 13px;font-weight:600;font-size:13.5px;cursor:pointer;color:var(--muted)}
+.ttabs button[aria-selected="true"]{background:var(--ink);color:var(--surface);border-color:var(--ink)}
+.tpanel{padding:18px 20px 22px;display:flex;flex-direction:column;gap:14px}
+
+/* KPI */
+.kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,150px),1fr));gap:10px}
+.kpi{background:var(--surface-2);border-radius:10px;padding:10px 12px;min-width:0}
+.kpi span{display:block;font-size:12px;color:var(--muted);font-weight:600}
+.kpi b{display:block;font-family:var(--font-mono);font-size:19px;font-variant-numeric:tabular-nums;margin-top:2px;overflow-wrap:anywhere}
+.kpi.good b{color:var(--good)} .kpi.warn b{color:var(--warn)} .kpi.crit b{color:var(--crit)} .kpi.acc{background:var(--accent-soft)}
+
+/* 3D */
+.stage{position:relative;height:380px;border-radius:10px;background:radial-gradient(ellipse at 50% 30%,var(--surface) 0%,var(--surface-2) 100%);border:1px solid var(--line);overflow:hidden;touch-action:pan-y}
+.stage canvas{display:block;width:100%!important;height:100%!important;cursor:grab}
+.stage canvas:active{cursor:grabbing}
+.stage .hint{position:absolute;left:10px;bottom:8px;font-size:11.5px;color:var(--muted);background:var(--surface);border:1px solid var(--line);padding:2px 8px;border-radius:999px;pointer-events:none}
+.stage .legend{position:absolute;right:10px;top:10px;display:flex;flex-direction:column;gap:4px;background:var(--surface);border:1px solid var(--line);border-radius:8px;padding:6px 9px;font-size:12px;pointer-events:none}
+.legend i{display:inline-block;width:10px;height:10px;border-radius:3px;margin-right:6px;vertical-align:-1px}
+@media (max-width:600px){.stage{height:300px}.stage .legend{font-size:10.5px;padding:4px 7px;gap:2px}}
+.stage.tall{height:440px}
+@media (max-width:600px){.stage.tall{height:330px}}
+
+/* tablas */
+.tw{overflow-x:auto;border:1px solid var(--line);border-radius:10px}
+table{border-collapse:collapse;width:100%;font-size:13.5px}
+th,td{padding:7px 9px;border-bottom:1px solid var(--line);text-align:left;vertical-align:middle}
+th{background:var(--surface-2);font-size:12px;text-transform:uppercase;letter-spacing:.04em;color:var(--muted);white-space:nowrap}
+td.r,th.r{text-align:right}
+tr:last-child td{border-bottom:0}
+td input,td select{padding:5px 7px;font-size:13px}
+td input[type=number]{width:84px}
+td select{min-width:58px}
+.tot td{font-weight:700;background:var(--accent-soft)}
+.x{border:0;background:transparent;color:var(--muted);cursor:pointer;font-size:16px;padding:2px 6px;border-radius:6px}
+.x:hover{color:var(--crit);background:var(--crit-soft)}
+
+/* hero */
+.hero{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.05fr);gap:24px;align-items:center}
+@media (max-width:900px){.hero{grid-template-columns:minmax(0,1fr)}}
+.hero h1{font-size:clamp(32px,5vw,52px);font-weight:700;letter-spacing:-.025em;margin:8px 0 12px}
+.hero h1 em{font-style:normal;background:linear-gradient(transparent 62%,var(--accent) 62%)}
+.unitcards{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,250px),1fr));gap:14px}
+.ucard{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:18px;display:flex;flex-direction:column;gap:8px;text-decoration:none;color:inherit;transition:transform .15s,border-color .15s}
+.ucard:hover{transform:translateY(-2px);border-color:var(--accent)}
+.ucard .n{font-family:var(--font-display);font-size:38px;font-weight:700;line-height:1;color:var(--accent-text)}
+.ucard h3{font-size:17px}
+.ucard p{color:var(--muted);font-size:14px}
+.ucard .tools{display:flex;gap:6px;flex-wrap:wrap;margin-top:auto;padding-top:6px}
+
+/* banda de unidad */
+.uband{display:grid;grid-template-columns:auto minmax(0,1fr);gap:20px;align-items:center;background:var(--band);color:var(--band-ink);border:1px solid var(--line);border-radius:var(--r);padding:22px 24px}
+.uband .big{font-family:var(--font-display);font-size:clamp(56px,9vw,96px);font-weight:700;line-height:.85;color:var(--accent)}
+.uband h2{font-size:clamp(22px,3vw,30px);color:var(--band-ink)}
+.uband p{color:var(--band-ink);opacity:.82;font-size:14.5px;margin-top:8px;max-width:80ch}
+.uband .logro b{color:var(--accent)}
+@media (max-width:560px){.uband{grid-template-columns:minmax(0,1fr)}}
+.secthead{display:flex;align-items:baseline;gap:12px;flex-wrap:wrap}
+.secthead h2{font-size:22px}
+.secthead span{color:var(--muted);font-size:14px}
+
+/* flujos */
+.flow{display:flex;gap:0;flex-wrap:wrap}
+.flow .st{flex:1 1 130px;min-width:0;position:relative;background:var(--surface-2);padding:12px 14px 12px 22px;clip-path:polygon(0 0,calc(100% - 14px) 0,100% 50%,calc(100% - 14px) 100%,0 100%,14px 50%);margin-right:-6px;cursor:pointer;border:0;text-align:left}
+.flow .st:first-child{clip-path:polygon(0 0,calc(100% - 14px) 0,100% 50%,calc(100% - 14px) 100%,0 100%);padding-left:14px}
+.flow .st b{display:block;font-family:var(--font-display);font-size:14.5px}
+.flow .st span{font-size:12px;color:var(--muted)}
+.flow .st[aria-pressed="true"]{background:var(--accent);color:var(--accent-ink)}
+.flow .st[aria-pressed="true"] span{color:var(--accent-ink);opacity:.8}
+.detail{background:var(--surface-2);border-radius:10px;padding:14px 16px;font-size:14.5px}
+
+/* tarjetas que se voltean */
+.flip{border:1px solid var(--line);background:var(--surface);border-radius:10px;padding:14px;text-align:left;cursor:pointer;display:flex;flex-direction:column;gap:6px;min-height:118px}
+.flip b{font-family:var(--font-display);font-size:15px}
+.flip .back{display:none;font-size:13.5px;color:var(--muted)}
+.flip[aria-expanded="true"]{border-color:var(--accent);background:var(--accent-soft)}
+.flip[aria-expanded="true"] .back{display:block;color:var(--ink)}
+.flip .front{font-size:12.5px;color:var(--muted)}
+.flip[aria-expanded="true"] .front{display:none}
+
+/* checks del constructor */
+.checks{display:flex;flex-direction:column;gap:6px}
+.chk{display:flex;gap:8px;align-items:flex-start;font-size:13.5px}
+.chk i{flex:none;width:18px;height:18px;border-radius:50%;display:grid;place-items:center;font-style:normal;font-size:11px;font-weight:700;margin-top:1px}
+.chk.ok i{background:var(--good);color:var(--surface)}
+.chk.no i{background:var(--surface-2);color:var(--muted);border:1px solid var(--line)}
+.meter{height:8px;background:var(--surface-2);border-radius:99px;overflow:hidden}
+.meter i{display:block;height:100%;background:var(--accent);border-radius:99px;transition:width .3s}
+.preview{background:var(--surface-2);border-radius:10px;padding:14px;font-size:14px;white-space:pre-wrap}
+
+/* checklist integrador */
+.ck{display:flex;gap:10px;align-items:flex-start;padding:9px 0;border-bottom:1px solid var(--line)}
+.ck:last-child{border-bottom:0}
+.ck input{width:18px;height:18px;accent-color:var(--good);margin-top:2px;flex:none}
+.ck label{flex:1;font-size:14.5px;cursor:pointer}
+.ck .go{flex:none}
+.ring{width:84px;height:84px;flex:none}
+.prog-row{display:flex;gap:16px;align-items:center;flex-wrap:wrap}
+
+/* quiz */
+.q{display:flex;flex-direction:column;gap:10px}
+.q .opts{display:flex;flex-direction:column;gap:8px}
+.opt{border:1px solid var(--line);background:var(--surface);border-radius:10px;padding:10px 12px;text-align:left;cursor:pointer;display:flex;gap:10px;align-items:flex-start;font-size:14.5px}
+.opt:hover{border-color:var(--muted)}
+.opt .l{flex:none;width:24px;height:24px;border-radius:50%;background:var(--surface-2);display:grid;place-items:center;font-weight:700;font-size:12.5px;font-family:var(--font-display)}
+.opt.ok{border-color:var(--good);background:var(--good-soft)}
+.opt.ok .l{background:var(--good);color:var(--surface)}
+.opt.bad{border-color:var(--crit);background:var(--crit-soft)}
+.opt.bad .l{background:var(--crit);color:var(--surface)}
+.opt:disabled{cursor:default}
+.fb{border-radius:10px;padding:10px 14px;font-size:14px}
+.fb.ok{background:var(--good-soft)} .fb.bad{background:var(--crit-soft)}
+.qbar{display:flex;gap:4px;flex-wrap:wrap}
+.qbar span{width:22px;height:6px;border-radius:9px;background:var(--surface-2)}
+.qbar span.ok{background:var(--good)} .qbar span.bad{background:var(--crit)} .qbar span.cur{background:var(--accent)}
+
+/* glosario */
+.gl{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,300px),1fr));gap:10px}
+.gl .mini b{font-family:var(--font-display);font-size:15px}
+
+/* svg */
+svg text{font-family:var(--font-body)}
+.svgwrap{width:100%;overflow-x:auto}
+.svgwrap svg{display:block;width:100%;height:auto;min-width:520px}
+
+/* fishbone */
+.ish-cats{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,180px),1fr));gap:10px}
+.ish-cat{background:var(--surface-2);border-radius:10px;padding:10px;display:flex;flex-direction:column;gap:6px;min-width:0}
+.ish-cat h4{font-size:14px}
+.ish-cat .row{display:flex;gap:4px}
+.cause{display:flex;gap:6px;align-items:center;font-size:13px;background:var(--surface);border:1px solid var(--line);border-radius:7px;padding:4px 6px}
+.cause span{flex:1;min-width:0;overflow-wrap:anywhere}
+.cause button.v{border:1px solid var(--line);background:var(--surface);border-radius:6px;font-size:11px;padding:1px 6px;cursor:pointer;color:var(--muted)}
+.cause button.v[aria-pressed="true"]{background:var(--good);color:var(--surface);border-color:var(--good)}
+
+.heat td{text-align:center;font-family:var(--font-mono);font-weight:600}
+footer{margin-top:40px;color:var(--muted);font-size:12.5px;border-top:1px solid var(--line);padding-top:16px;display:flex;flex-direction:column;gap:4px}
+@media (prefers-reduced-motion: reduce){*{transition:none!important;animation:none!important}}
+</style>
+<header class="top">
+  <div class="top-inner">
+    <div class="brand">
+      <div class="mark" aria-hidden="true"><span><i></i><i></i></span></div>
+      <b>Laboratorio de Presupuesto e Inversión Pública</b>
+      <small>Maestría en Gestión Pública · Autor: Gilmer Sánchez Valenzuela</small>
+    </div>
+    <nav class="tabs-nav" aria-label="Secciones">
+      <a href="#inicio">Inicio</a>
+      <a href="#unidad-1"><span class="u">U1</span>Sistemas y valor público</a>
+      <a href="#unidad-2"><span class="u">U2</span>Estructura del presupuesto</a>
+      <a href="#unidad-3"><span class="u">U3</span>Ciclo y ejecución</a>
+      <a href="#unidad-4"><span class="u">U4</span>Evaluación e inversión</a>
+      <a href="#integrador">Trabajo integrador</a>
+      <a href="#quiz">Autoevaluación</a>
+      <a href="#glosario">Glosario</a>
+    </nav>
+  </div>
+</header>
+
+<main>
+<!-- ======================= INICIO ======================= -->
+<section data-view="inicio">
+  <div class="hero">
+    <div>
+      <div class="eyebrow">Curso Presupuesto e Inversión Pública</div>
+      <h1>Del presupuesto al <em>valor público</em></h1>
+      <p class="lead">Teoría de las cuatro unidades, simuladores con datos de ejemplo y una calculadora de los siete indicadores del trabajo integrador. Mueve los controles, gira los gráficos 3D y descubre en qué etapa se traba el gasto de una entidad.</p>
+      <div class="btns" style="margin-top:18px">
+        <a class="btn primary" href="#unidad-1">Empezar por la Unidad 1</a>
+        <a class="btn" href="#unidad-3" data-go="unidad-3" data-target="sim-embudo">Calcular mis indicadores</a>
+        <a class="btn" href="#integrador">Ir al trabajo integrador</a>
+      </div>
+    </div>
+    <div class="stage tall" id="heroStage">
+      <span class="hint">Arrastra para girar · toca un pilar para abrir la unidad</span>
+    </div>
+  </div>
+
+  <div class="unitcards">
+    <a class="ucard" href="#unidad-1"><span class="n">01</span><h3>Sistemas y valor público</h3><p>Sistemas administrativos, administración financiera, gasto efectivo, principios del gasto y fuentes de financiamiento.</p><div class="tools"><span class="tag sim">Del gasto al valor público, en 3D</span></div></a>
+    <a class="ucard" href="#unidad-2"><span class="n">02</span><h3>Estructura del presupuesto</h3><p>Principios, marco normativo, organización, clasificadores, presupuesto por resultados y herramientas del MEF.</p><div class="tools"><span class="tag sim">Clasifica el gasto</span><span class="tag sim">Mapa 3D del presupuesto</span></div></a>
+    <a class="ucard" href="#unidad-3"><span class="n">03</span><h3>Ciclo y ejecución</h3><p>Programación multianual, formulación, del PIA al PIM, modificaciones, etapas del gasto y PCA.</p><div class="tools"><span class="tag sim">Embudo 3D y 7 indicadores</span><span class="tag sim">Curva mensual</span></div></a>
+    <a class="ucard" href="#unidad-4"><span class="n">04</span><h3>Evaluación e inversión</h3><p>Evaluación presupuestaria, calidad del gasto, indicadores, Invierte.pe, IOARR y funcionamiento.</p><div class="tools"><span class="tag sim">Físico vs. financiero 3D</span><span class="tag sim">Recomendaciones</span></div></a>
+  </div>
+
+  <div class="grid3">
+    <div class="mini"><span class="k">PASO 1</span><h4>Lee la teoría de la unidad</h4><p>Cada unidad abre con su logro y los conceptos en pestañas cortas, con ejemplos de entidades.</p></div>
+    <div class="mini"><span class="k">PASO 2</span><h4>Practica en el simulador</h4><p>Cambia los datos y lee el recuadro amarillo: explica qué cambió y qué significa para la gestión.</p></div>
+    <div class="mini"><span class="k">PASO 3</span><h4>Aplica a tu entidad</h4><p>Carga en la calculadora las cifras de Consulta Amigable de tu entidad y marca tu avance en la guía del trabajo.</p></div>
+  </div>
+  <p class="note">Los datos de ejemplo corresponden a una entidad ficticia, la Municipalidad Provincial Modelo. En el trabajo integrador usa cifras oficiales de tu entidad, con fecha de consulta.</p>
+</section>
+
+<!-- ======================= UNIDAD 1 ======================= -->
+<section data-view="unidad-1" hidden>
+  <div class="uband">
+    <div class="big">1</div>
+    <div>
+      <h2>Sistema administrativo del Estado, administración financiera y gasto público efectivo</h2>
+      <p class="logro"><b>Logro:</b> analiza el rol de los sistemas administrativos del Estado y de la administración financiera pública en la generación de valor público, reconociendo los principios del gasto, las fuentes que lo financian y su relación con la gestión estratégica.</p>
+    </div>
+  </div>
+
+  <div class="panel" data-tabs>
+    <div class="panel-head"><div><h3>Teoría</h3><p>Por qué tener presupuesto no basta para generar resultados.</p></div></div>
+    <div class="ttabs" role="tablist">
+      <button role="tab" data-tab="e">Enfoque</button>
+      <button role="tab" data-tab="s">Sistemas administrativos</button>
+      <button role="tab" data-tab="g">Ciclo del gasto</button>
+      <button role="tab" data-tab="v">Valor público</button>
+      <button role="tab" data-tab="p">Principios del gasto</button>
+      <button role="tab" data-tab="f">Fuentes</button>
+    </div>
+    <div class="tpanel" data-panel="e">
+      <p>La gestión pública peruana pasó del cumplimiento de procedimientos a la orientación a resultados. El presupuesto deja de ser un fin y se vuelve un medio para cambiar la vida de las personas.</p>
+      <div class="grid3">
+        <div class="mini"><span class="k">RESULTADOS</span><h4>Orientación a resultados</h4><p>Se asignan recursos según productos e indicadores, no solo según insumos.</p></div>
+        <div class="mini"><span class="k">ARTICULACIÓN</span><h4>Articulación sistémica</h4><p>Planeamiento, presupuesto, abastecimiento, tesorería y control trabajan como una cadena.</p></div>
+        <div class="mini"><span class="k">TRANSPARENCIA</span><h4>Rendición de cuentas</h4><p>La información presupuestal es pública y verificable en las herramientas del MEF.</p></div>
+      </div>
+      <div class="insight">Caso de apertura: una municipalidad con más presupuesto cada año, pero con ejecución menor al 65 % y sin cambios en anemia ni en vías. Más recursos no son mejores resultados.</div>
+    </div>
+    <div class="tpanel" data-panel="s" hidden>
+      <p>La Administración Financiera del Sector Público (DL 1436) integra los sistemas que manejan los recursos del Estado. Toca cada sistema para ver su aporte al valor público.</p>
+      <div class="grid4" id="sisFlips"></div>
+    </div>
+    <div class="tpanel" data-panel="g" hidden>
+      <p>Cada etapa del gasto involucra a un sistema distinto. Toca cada etapa.</p>
+      <div class="flow" id="gastoFlow"></div>
+      <div class="detail" id="gastoDetail"></div>
+    </div>
+    <div class="tpanel" data-panel="v" hidden>
+      <div class="grid3">
+        <div class="mini"><span class="k">RESULTADOS</span><h4>Cambios en la población</h4><p>Menos anemia, menos tiempo de viaje, más acceso a agua segura.</p></div>
+        <div class="mini"><span class="k">SERVICIOS</span><h4>Calidad y oportunidad</h4><p>Servicios que llegan a tiempo, funcionan y se mantienen.</p></div>
+        <div class="mini"><span class="k">CONFIANZA</span><h4>Legitimidad</h4><p>Uso transparente y honesto de los recursos.</p></div>
+      </div>
+      <div class="insight"><b>Gasto ejecutado no es gasto efectivo.</b> El gasto gubernamental efectivo es el que se convierte en bienes y servicios que la población usa y valora. Pruébalo en el simulador de abajo.</div>
+    </div>
+    <div class="tpanel" data-panel="p" hidden>
+      <div class="grid3">
+        <div class="mini"><span class="k">DL 1440</span><h4>Universalidad y unidad</h4><p>Todos los ingresos y gastos se sujetan a la Ley de Presupuesto.</p></div>
+        <div class="mini"><span class="k">DL 1440</span><h4>Equilibrio presupuestario</h4><p>No se autoriza gasto sin financiamiento.</p></div>
+        <div class="mini"><span class="k">DL 1440</span><h4>Especialidad cualitativa</h4><p>Los créditos se usan solo para la finalidad autorizada.</p></div>
+        <div class="mini"><span class="k">DL 1440</span><h4>Especialidad cuantitativa</h4><p>Los créditos son límites máximos de gasto.</p></div>
+        <div class="mini"><span class="k">DL 1440</span><h4>Transparencia presupuestal</h4><p>La población accede a la información presupuestal.</p></div>
+        <div class="mini"><span class="k">DL 1440</span><h4>Orientación a la población</h4><p>El presupuesto busca resultados que mejoren la vida de las personas.</p></div>
+      </div>
+    </div>
+    <div class="tpanel" data-panel="f" hidden>
+      <div class="tw"><table>
+        <thead><tr><th>Fuente de financiamiento</th><th>Qué incluye</th><th>Lo que hay que vigilar</th></tr></thead>
+        <tbody>
+          <tr><td><b>Recursos Ordinarios (RO)</b></td><td>Recaudación tributaria nacional</td><td>Dependen de la asignación del Gobierno Nacional</td></tr>
+          <tr><td><b>Recursos Directamente Recaudados (RDR)</b></td><td>Tasas, derechos, venta de servicios de la entidad</td><td>Su proyección debe ser realista</td></tr>
+          <tr><td><b>Operaciones Oficiales de Crédito (ROOC)</b></td><td>Endeudamiento interno y externo</td><td>Genera servicio de deuda futuro</td></tr>
+          <tr><td><b>Donaciones y Transferencias (DyT)</b></td><td>Transferencias entre entidades y donaciones</td><td>Suelen llegar a mitad de año</td></tr>
+          <tr><td><b>Recursos Determinados (RD)</b></td><td>Canon, sobrecanon, regalías, FONCOMUN, impuestos municipales</td><td>Volátiles y con destino definido por ley</td></tr>
+        </tbody></table></div>
+    </div>
+  </div>
+
+  <div class="panel" id="sim-valor">
+    <div class="panel-head">
+      <div><h3>Simulador: del gasto ejecutado al valor público</h3><p>De cada S/ 100 de presupuesto, ¿cuánto llega a ser valor público? Mueve cada factor o carga un caso.</p></div>
+      <span class="tag sim">Modelo didáctico · S/ por cada 100</span>
+    </div>
+    <div class="panel-body">
+      <div class="btns" id="vpPresets"><button class="btn sm" data-p="losa">Caso: la losa deportiva</button><button class="btn sm" data-p="art">Gestión articulada</button><button class="btn sm" data-p="baja">Baja ejecución, buena calidad</button></div>
+      <div class="split">
+        <div class="stage" id="vpStage"><span class="hint">Arrastra para girar</span></div>
+        <div style="display:flex;flex-direction:column;gap:12px;min-width:0" id="vpSliders"></div>
+      </div>
+      <div class="kpis" id="vpKpis"></div>
+      <div class="insight" id="vpInsight"></div>
+      <div class="callout teal"><span class="ic">TI</span><div><b>Para tu trabajo integrador:</b> en la sección 1 identifica qué sistema de tu entidad es el eslabón débil. En la sección 4, verifica si una inversión ya terminada realmente presta el servicio.</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- ======================= UNIDAD 2 ======================= -->
+<section data-view="unidad-2" hidden>
+  <div class="uband">
+    <div class="big">2</div>
+    <div>
+      <h2>Sistema Nacional de Presupuesto Público y articulación con la gestión estratégica</h2>
+      <p class="logro"><b>Logro:</b> aplica criterios técnicos y normativos para analizar la organización del presupuesto público, sus principios, clasificadores e instrumentos, y su articulación con el planeamiento y la gestión por resultados.</p>
+    </div>
+  </div>
+
+  <div class="panel" data-tabs>
+    <div class="panel-head"><div><h3>Teoría</h3><p>Cómo está organizado el presupuesto y cómo leerlo.</p></div></div>
+    <div class="ttabs" role="tablist">
+      <button role="tab" data-tab="q">Qué es</button>
+      <button role="tab" data-tab="n">Marco normativo</button>
+      <button role="tab" data-tab="o">Organización</button>
+      <button role="tab" data-tab="c">Clasificadores</button>
+      <button role="tab" data-tab="r">Presupuesto por resultados</button>
+      <button role="tab" data-tab="h">Herramientas del MEF</button>
+    </div>
+    <div class="tpanel" data-panel="q">
+      <p>El presupuesto público es el instrumento de gestión del Estado que permite asignar recursos a las entidades para lograr resultados a favor de la población, dentro de los límites de los ingresos y de las reglas fiscales.</p>
+      <div class="grid3">
+        <div class="mini"><span class="k">FINALIDAD</span><h4>Asignar</h4><p>Distribuye recursos escasos entre prioridades.</p></div>
+        <div class="mini"><span class="k">FINALIDAD</span><h4>Limitar</h4><p>Fija el máximo que cada entidad puede gastar.</p></div>
+        <div class="mini"><span class="k">FINALIDAD</span><h4>Orientar a resultados</h4><p>Vincula el gasto con productos e indicadores.</p></div>
+      </div>
+    </div>
+    <div class="tpanel" data-panel="n" hidden>
+      <div class="tw"><table>
+        <thead><tr><th>Norma</th><th>Qué regula</th></tr></thead>
+        <tbody>
+          <tr><td><b>DL 1440</b></td><td>Sistema Nacional de Presupuesto Público: principios, fases del ciclo, etapas del gasto, PCA, modificaciones</td></tr>
+          <tr><td><b>Ley N.° 32513</b></td><td>Ley de Presupuesto del Sector Público para el año fiscal 2026: créditos aprobados y reglas del año</td></tr>
+          <tr><td><b>DL 1436</b></td><td>Marco de la Administración Financiera del Sector Público</td></tr>
+          <tr><td><b>DL 1252</b></td><td>Sistema Nacional de Programación Multianual y Gestión de Inversiones (Invierte.pe)</td></tr>
+          <tr><td><b>Ley N.° 32069</b></td><td>Ley General de Contrataciones Públicas (reemplaza a la Ley 30225)</td></tr>
+        </tbody></table></div>
+      <p class="note">La ley anual no sustituye al DL 1440: la norma permanente y la ley del año se aplican juntas.</p>
+    </div>
+    <div class="tpanel" data-panel="o" hidden>
+      <div class="grid4">
+        <div class="mini"><span class="k">ENTE RECTOR</span><h4>DGPP del MEF</h4><p>Dicta normas, fija la APM y conduce el proceso presupuestario.</p></div>
+        <div class="mini"><span class="k">PLIEGO</span><h4>Pliego presupuestario</h4><p>Entidad con crédito aprobado en la ley anual; su titular responde por la gestión.</p></div>
+        <div class="mini"><span class="k">UNIDAD EJECUTORA</span><h4>Unidad ejecutora</h4><p>Nivel descentralizado que ejecuta ingresos y gastos, con su propia administración.</p></div>
+        <div class="mini"><span class="k">OFICINA</span><h4>Oficina de Presupuesto</h4><p>Coordina el proceso en la entidad: certificación, modificaciones, PCA.</p></div>
+      </div>
+    </div>
+    <div class="tpanel" data-panel="c" hidden>
+      <p>Una misma operación se lee con cuatro criterios a la vez:</p>
+      <div class="grid4">
+        <div class="mini"><span class="k">INSTITUCIONAL</span><h4>¿Quién gasta?</h4><p>Sector, pliego y unidad ejecutora.</p></div>
+        <div class="mini"><span class="k">FUNCIONAL</span><h4>¿Para qué?</h4><p>Función, división funcional y grupo funcional.</p></div>
+        <div class="mini"><span class="k">PROGRAMÁTICO</span><h4>¿Con qué lógica?</h4><p>Categoría presupuestal: programa presupuestal, acciones centrales o APNOP.</p></div>
+        <div class="mini"><span class="k">ECONÓMICO</span><h4>¿En qué?</h4><p>Genérica, subgenérica y específica del gasto (2.1 a 2.8).</p></div>
+      </div>
+      <div class="tw"><table>
+        <thead><tr><th>Genérica</th><th>Nombre</th><th>Tipo</th></tr></thead>
+        <tbody>
+          <tr><td class="mono">2.1</td><td>Personal y obligaciones sociales</td><td>Corriente</td></tr>
+          <tr><td class="mono">2.2</td><td>Pensiones y otras prestaciones sociales</td><td>Corriente</td></tr>
+          <tr><td class="mono">2.3</td><td>Bienes y servicios</td><td>Corriente</td></tr>
+          <tr><td class="mono">2.4</td><td>Donaciones y transferencias</td><td>Corriente</td></tr>
+          <tr><td class="mono">2.5</td><td>Otros gastos</td><td>Corriente</td></tr>
+          <tr><td class="mono">2.6</td><td>Adquisición de activos no financieros</td><td>Capital</td></tr>
+          <tr><td class="mono">2.7</td><td>Adquisición de activos financieros</td><td>Capital</td></tr>
+          <tr><td class="mono">2.8</td><td>Servicio de la deuda pública</td><td>Deuda</td></tr>
+        </tbody></table></div>
+    </div>
+    <div class="tpanel" data-panel="r" hidden>
+      <div class="flow">
+        <div class="st" style="cursor:default"><b>Resultado final</b><span>Cambio de largo plazo en la población</span></div>
+        <div class="st" style="cursor:default"><b>Resultado específico</b><span>Lo que el programa debe lograr</span></div>
+        <div class="st" style="cursor:default"><b>Productos</b><span>Bienes y servicios entregados</span></div>
+        <div class="st" style="cursor:default"><b>Actividades</b><span>Acciones que generan los productos</span></div>
+      </div>
+      <p>Un programa presupuestal se mide con indicadores de desempeño: de producto (cobertura, calidad) y de resultado (cambio en la población). Ejecutar el 80 % del PIM con 54 % de cobertura no es buen desempeño.</p>
+    </div>
+    <div class="tpanel" data-panel="h" hidden>
+      <div class="grid3">
+        <div class="mini"><span class="k">CONSULTA AMIGABLE</span><h4>Ejecución presupuestal</h4><p>PIA, PIM, certificado, compromiso, devengado y girado por fuente, genérica, categoría y mes.</p></div>
+        <div class="mini"><span class="k">TRANSPARENCIA ECONÓMICA</span><h4>Ingresos y transferencias</h4><p>Canon, FONCOMUN y otras transferencias a gobiernos subnacionales.</p></div>
+        <div class="mini"><span class="k">INVIERTE.PE</span><h4>Banco y seguimiento</h4><p>Ficha de cada inversión por su código único (CUI).</p></div>
+      </div>
+      <div class="insight">Consultar con propósito: 1) define la pregunta, 2) elige la entidad y el año, 3) filtra por el clasificador que responde la pregunta, 4) descarga y anota la fecha, 5) interpreta con causas, no solo con porcentajes.</div>
+    </div>
+  </div>
+
+  <div class="panel" id="sim-clasifica">
+    <div class="panel-head">
+      <div><h3>Práctica: clasifica el gasto</h3><p>Elige la genérica de gasto correcta para cada operación. Cada respuesta trae su explicación.</p></div>
+      <div class="btns"><span class="tag" id="clsScore"></span><button class="btn sm" id="clsReset">Reiniciar</button></div>
+    </div>
+    <div class="panel-body"><div class="grid2" id="clsList"></div></div>
+  </div>
+
+  <div class="panel" id="sim-mapa">
+    <div class="panel-head">
+      <div><h3>Simulador: mapa 3D del presupuesto</h3><p>Municipalidad Provincial Modelo, 2023 a 2026. Cambia la vista para leer de dónde vienen los recursos y en qué se gastan.</p></div>
+      <span class="tag ilu">Entidad ficticia · S/ millones</span>
+    </div>
+    <div class="panel-body">
+      <div class="seg" id="mapView"><button data-v="f" aria-pressed="true">PIM por fuente</button><button data-v="g" aria-pressed="false">Devengado por genérica</button></div>
+      <div class="split">
+        <div class="stage tall" id="mapStage"><span class="hint">Arrastra para girar</span><div class="legend" id="mapLegend"></div></div>
+        <div style="display:flex;flex-direction:column;gap:12px;min-width:0">
+          <div class="tw" id="mapTable"></div>
+          <div class="insight" id="mapInsight"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ======================= UNIDAD 3 ======================= -->
+<section data-view="unidad-3" hidden>
+  <div class="uband">
+    <div class="big">3</div>
+    <div>
+      <h2>Programación, formulación, aprobación y ejecución presupuestaria</h2>
+      <p class="logro"><b>Logro:</b> aplica criterios técnicos y normativos para analizar las fases de programación multianual, formulación, aprobación y ejecución del presupuesto, identificando reglas fiscales, modificaciones presupuestarias y etapas del gasto.</p>
+    </div>
+  </div>
+
+  <div class="panel" data-tabs>
+    <div class="panel-head"><div><h3>Teoría</h3><p>Del techo macrofiscal al último sol devengado.</p></div></div>
+    <div class="ttabs" role="tablist">
+      <button role="tab" data-tab="c">Ciclo presupuestario</button>
+      <button role="tab" data-tab="p">Programación multianual</button>
+      <button role="tab" data-tab="m">Del PIA al PIM</button>
+      <button role="tab" data-tab="e">Etapas del gasto y PCA</button>
+      <button role="tab" data-tab="g">Gestión eficiente</button>
+    </div>
+    <div class="tpanel" data-panel="c">
+      <div class="flow">
+        <div class="st" style="cursor:default"><b>Programación</b><span>Tres años dentro de la APM</span></div>
+        <div class="st" style="cursor:default"><b>Formulación</b><span>Según el POI</span></div>
+        <div class="st" style="cursor:default"><b>Aprobación</b><span>Ley anual: nace el PIA</span></div>
+        <div class="st" style="cursor:default"><b>Ejecución</b><span>Ingresos y gastos</span></div>
+        <div class="st" style="cursor:default"><b>Evaluación</b><span>Evidencia para decidir</span></div>
+      </div>
+      <p>Fases que regula el DL 1440. La evaluación de un año alimenta la programación de los siguientes.</p>
+    </div>
+    <div class="tpanel" data-panel="p" hidden>
+      <div class="grid3">
+        <div class="mini"><span class="k">MMM</span><h4>Marco Macroeconómico Multianual</h4><p>Fija las proyecciones y reglas fiscales del país.</p></div>
+        <div class="mini"><span class="k">APM</span><h4>Asignación Presupuestaria Multianual</h4><p>Techos máximos por pliego que fija el MEF sobre la base del MMM.</p></div>
+        <div class="mini"><span class="k">POI</span><h4>Articulación con el planeamiento</h4><p>Cada actividad e inversión se vincula a un producto del POI y a un objetivo del PEI.</p></div>
+      </div>
+      <div class="insight">El MMM no fija techos por entidad: lo hace la APM. Una propuesta que supera su techo será observada.</div>
+    </div>
+    <div class="tpanel" data-panel="m" hidden>
+      <div class="grid2">
+        <div class="mini"><span class="k">NIVEL INSTITUCIONAL</span><h4>Cambian el total del pliego</h4><p>Créditos suplementarios (mayores fondos, como saldos de balance) y transferencias de partidas entre pliegos.</p></div>
+        <div class="mini"><span class="k">NIVEL FUNCIONAL PROGRAMÁTICO</span><h4>No cambian el total</h4><p>Anulaciones y habilitaciones dentro del pliego, aprobadas por resolución del titular.</p></div>
+      </div>
+      <div class="insight">PIM = PIA ± modificaciones del año. Una diferencia muy grande entre PIA y PIM revela una formulación poco realista.</div>
+    </div>
+    <div class="tpanel" data-panel="e" hidden>
+      <div class="flow">
+        <div class="st" style="cursor:default"><b>Certificación</b><span>Crédito disponible y libre</span></div>
+        <div class="st" style="cursor:default"><b>Compromiso</b><span>Obligación con un tercero</span></div>
+        <div class="st" style="cursor:default"><b>Devengado</b><span>Bien o servicio recibido</span></div>
+        <div class="st" style="cursor:default"><b>Pago</b><span>Extingue la deuda</span></div>
+      </div>
+      <p>La Programación de Compromisos Anual (PCA) es el tope de compromisos del año, compatible con los ingresos y las reglas fiscales. Una PCA mal distribuida entre áreas concentra el gasto al cierre.</p>
+      <div class="insight">Pagar sin devengado oculta pasivos; comprometer sin certificar genera gasto sin cobertura.</div>
+    </div>
+    <div class="tpanel" data-panel="g" hidden>
+      <div class="grid2">
+        <div class="mini"><span class="k">EFICIENTE</span><h4>Gestión eficiente</h4><p>Requerimientos a tiempo, PAC alineado al POI, PCA distribuida por trimestre, seguimiento físico y financiero.</p></div>
+        <div class="mini"><span class="k">DEFICIENTE</span><h4>Gestión deficiente</h4><p>Requerimientos tardíos, compras de último trimestre, compromisos sin devengar, saldos que se revierten.</p></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="panel" id="sim-embudo">
+    <div class="panel-head">
+      <div><h3>Calculadora: embudo de ejecución y siete indicadores</h3><p>Escribe las cifras de un año de tu entidad (de Consulta Amigable) o usa el ejemplo. El embudo muestra en qué etapa se pierde el presupuesto.</p></div>
+      <div class="btns"><button class="btn sm" id="embEx">Cargar ejemplo 2025</button><button class="btn sm" id="embMine">Mi entidad</button></div>
+    </div>
+    <div class="panel-body">
+      <div class="split">
+        <div class="stage" id="embStage"><span class="hint">Arrastra para girar</span></div>
+        <div style="display:flex;flex-direction:column;gap:10px;min-width:0">
+          <p class="note" id="embMode"></p>
+          <div class="grid2" style="gap:8px;grid-template-columns:repeat(auto-fit,minmax(min(100%,150px),1fr))" id="embInputs"></div>
+        </div>
+      </div>
+      <div class="insight" id="embInsight"></div>
+      <div class="gl" id="embInd"></div>
+      <p class="note">Los umbrales del semáforo son referencias didácticas para orientar el análisis, no metas normativas. Un indicador no es una conclusión: explica cada valor con sus causas.</p>
+    </div>
+  </div>
+
+  <div class="panel" id="sim-mensual">
+    <div class="panel-head">
+      <div><h3>Simulador: curva de ejecución mensual</h3><p>Compara perfiles de ejecución a lo largo del año. Las barras son el devengado de cada mes; la línea, el avance acumulado frente al PIM.</p></div>
+      <span class="tag ilu">PIM de ejemplo: S/ 156,8 M</span>
+    </div>
+    <div class="panel-body">
+      <div class="seg" id="menProf"><button data-v="modelo" aria-pressed="true">Modelo 2025</button><button data-v="lineal" aria-pressed="false">Programación ideal</button><button data-v="tardio" aria-pressed="false">Arranque tardío</button><button data-v="mio" aria-pressed="false">Mis datos</button></div>
+      <div class="split">
+        <div class="stage" id="menStage"><span class="hint">Arrastra para girar</span>
+          <div class="legend"><span><i style="background:var(--teal)"></i>Enero a setiembre</span><span><i style="background:var(--accent)"></i>Octubre a diciembre</span><span><i style="background:var(--crit)"></i>% acumulado</span></div>
+        </div>
+        <div style="display:flex;flex-direction:column;gap:10px;min-width:0">
+          <div class="kpis" id="menKpis"></div>
+          <div class="insight" id="menInsight"></div>
+          <div id="menMine" hidden>
+            <label class="fld" for="menPim">PIM del año (S/ millones)<input type="number" id="menPim" min="0" step="0.1"></label>
+            <div class="grid4" style="gap:6px;grid-template-columns:repeat(auto-fit,minmax(min(100%,90px),1fr));margin-top:8px" id="menInputs"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="panel" id="sim-modif">
+    <div class="panel-head"><div><h3>Práctica: ¿qué modificación corresponde?</h3><p>Lee cada situación y elige el tipo de modificación presupuestaria.</p></div><span class="tag" id="modScore"></span></div>
+    <div class="panel-body"><div class="grid2" id="modList"></div></div>
+  </div>
+</section>
+
+<!-- ======================= UNIDAD 4 ======================= -->
+<section data-view="unidad-4" hidden>
+  <div class="uband">
+    <div class="big">4</div>
+    <div>
+      <h2>Evaluación presupuestaria, calidad del gasto e inversión pública</h2>
+      <p class="logro"><b>Logro:</b> evalúa la calidad del gasto y la gestión de la inversión pública, integrando información presupuestal y de proyectos para formular conclusiones y recomendaciones orientadas a mejorar la eficiencia, eficacia, transparencia y sostenibilidad.</p>
+    </div>
+  </div>
+
+  <div class="panel" data-tabs>
+    <div class="panel-head"><div><h3>Teoría</h3><p>Evaluar lo que cambia, no solo lo que se gasta.</p></div></div>
+    <div class="ttabs" role="tablist">
+      <button role="tab" data-tab="e">Evaluación</button>
+      <button role="tab" data-tab="c">Calidad del gasto</button>
+      <button role="tab" data-tab="j">Indicadores</button>
+      <button role="tab" data-tab="i">Invierte.pe</button>
+      <button role="tab" data-tab="t">PI e IOARR</button>
+    </div>
+    <div class="tpanel" data-panel="e">
+      <div class="grid3">
+        <div class="mini"><span class="k">INSTITUCIONAL</span><h4>¿Puede ejecutar?</h4><p>Estructura, procesos y cuellos de botella de la entidad.</p></div>
+        <div class="mini"><span class="k">PROGRAMÁTICA</span><h4>¿Contribuye a los objetivos?</h4><p>Productos que cierran brechas, no gasto inercial.</p></div>
+        <div class="mini"><span class="k">FINANCIERA</span><h4>¿Usa bien los fondos?</h4><p>Eficiencia, transparencia, costos unitarios.</p></div>
+      </div>
+      <p class="note">Marco: DL 1440 y Directiva N.° 0003-2024-EF/50.01 de evaluación presupuestaria.</p>
+    </div>
+    <div class="tpanel" data-panel="c" hidden>
+      <div class="grid4">
+        <div class="mini"><span class="k">EFICIENCIA</span><p>Uso óptimo de los recursos.</p></div>
+        <div class="mini"><span class="k">EFICACIA</span><p>Logro de los objetivos.</p></div>
+        <div class="mini"><span class="k">ECONOMÍA</span><p>Menor costo con la calidad requerida.</p></div>
+        <div class="mini"><span class="k">SOSTENIBILIDAD</span><p>Que los beneficios perduren.</p></div>
+      </div>
+      <div class="insight">Consulta Amigable sirve como alerta temprana si cruzas la ejecución financiera con el avance físico de los programas presupuestales.</div>
+    </div>
+    <div class="tpanel" data-panel="j" hidden>
+      <div class="flow">
+        <div class="st" style="cursor:default"><b>Insumo</b><span>Recursos asignados</span></div>
+        <div class="st" style="cursor:default"><b>Producto</b><span>Niños vacunados</span></div>
+        <div class="st" style="cursor:default"><b>Resultado</b><span>Menos enfermedad</span></div>
+        <div class="st" style="cursor:default"><b>Impacto</b><span>Mejor calidad de vida</span></div>
+      </div>
+      <p>El seguimiento tradicional mira cuánto se gastó; el seguimiento por resultados mira qué cambió en la población. Entregar 1 000 laptops es una meta física cumplida, no un aprendizaje logrado.</p>
+    </div>
+    <div class="tpanel" data-panel="i" hidden>
+      <p>Toca cada fase del ciclo de inversión (DL 1252).</p>
+      <div class="flow" id="invFlow"></div>
+      <div class="detail" id="invDetail"></div>
+      <div class="grid4">
+        <div class="mini"><span class="k">DGPMI</span><p>Ente rector del MEF.</p></div>
+        <div class="mini"><span class="k">OPMI</span><p>Programa la cartera y hace el seguimiento.</p></div>
+        <div class="mini"><span class="k">UF</span><p>Formula, evalúa y declara la viabilidad.</p></div>
+        <div class="mini"><span class="k">UEI</span><p>Elabora el expediente técnico y ejecuta.</p></div>
+      </div>
+    </div>
+    <div class="tpanel" data-panel="t" hidden>
+      <div class="tw"><table>
+        <thead><tr><th></th><th>Proyecto de inversión (PI)</th><th>IOARR</th></tr></thead>
+        <tbody>
+          <tr><td><b>Qué hace</b></td><td>Crea, amplía o mejora la capacidad de producción de un servicio</td><td>Optimización, ampliación marginal, reposición o rehabilitación</td></tr>
+          <tr><td><b>Documento</b></td><td>Ficha técnica o estudio de preinversión; declaración de viabilidad</td><td>Registro en el banco de inversiones; no requiere viabilidad</td></tr>
+          <tr><td><b>Ejemplo</b></td><td>Construir un sistema de agua potable</td><td>Reponer equipos médicos o una compactadora</td></tr>
+        </tbody></table></div>
+      <p>La unidad productora (UP) es el conjunto de recursos que presta el servicio; los activos estratégicos son los que la UP necesita. Una IOARR siempre interviene una UP existente.</p>
+    </div>
+  </div>
+
+  <div class="panel" id="sim-inversion">
+    <div class="panel-head">
+      <div><h3>Simulador: avance físico frente a financiero</h3><p>Cada par de barras es una inversión: avance físico y avance financiero. La esfera indica si la inversión concluida tiene presupuesto de operación y mantenimiento.</p></div>
+      <div class="btns"><button class="btn sm" id="invAdd">Agregar inversión</button><button class="btn sm" id="invReset">Restablecer ejemplo</button></div>
+    </div>
+    <div class="panel-body">
+      <div class="split">
+        <div class="stage" id="invStage"><span class="hint">Arrastra para girar</span>
+          <div class="legend"><span><i style="background:var(--teal)"></i>Avance físico</span><span><i style="background:var(--accent)"></i>Avance financiero</span><span><i style="background:var(--good)"></i>Opera con O&amp;M</span><span><i style="background:var(--crit)"></i>Sin O&amp;M</span></div>
+        </div>
+        <div style="display:flex;flex-direction:column;gap:10px;min-width:0" id="invDiag"></div>
+      </div>
+      <div class="tw"><table id="invTable">
+        <thead><tr><th>#</th><th>Inversión</th><th>Tipo</th><th class="r">Costo (S/)</th><th class="r">Devengado (S/)</th><th class="r">Físico (%)</th><th class="r">Financiero</th><th>¿Opera con O&amp;M?</th><th></th></tr></thead>
+        <tbody></tbody></table></div>
+    </div>
+  </div>
+
+  <div class="panel" id="sim-recom">
+    <div class="panel-head">
+      <div><h3>Constructor de recomendaciones</h3><p>El informe cierra con cinco recomendaciones. Escribe cada una y revisa si tiene lo que pide la rúbrica: hallazgo, acción, responsable, plazo y norma vigente.</p></div>
+      <div class="btns"><button class="btn sm" id="rcEx">Cargar ejemplo</button><button class="btn sm" id="rcClear">Limpiar</button></div>
+    </div>
+    <div class="panel-body">
+      <div class="split">
+        <div style="display:flex;flex-direction:column;gap:10px;min-width:0">
+          <label class="fld" for="rcHall">Hallazgo al que responde (con dato)<textarea id="rcHall"></textarea></label>
+          <label class="fld" for="rcRec">Recomendación<textarea id="rcRec"></textarea></label>
+          <div class="grid2" style="gap:10px">
+            <label class="fld" for="rcResp">Responsable (cargo u oficina)<input type="text" id="rcResp"></label>
+            <label class="fld" for="rcPlazo">Plazo<input type="text" id="rcPlazo"></label>
+          </div>
+          <label class="fld" for="rcNorma">Norma que la sustenta<input type="text" id="rcNorma"></label>
+          <div class="btns"><button class="btn primary" id="rcAdd">Agregar a mi lista</button><span class="note" id="rcMsg" aria-live="polite"></span></div>
+        </div>
+        <div style="display:flex;flex-direction:column;gap:12px;min-width:0">
+          <div><div style="display:flex;justify-content:space-between;font-weight:600;font-size:14px;margin-bottom:6px"><span>Calidad de la recomendación</span><span class="mono" id="rcScore"></span></div><div class="meter"><i id="rcBar" style="width:0"></i></div></div>
+          <div class="checks" id="rcChecks"></div>
+        </div>
+      </div>
+      <div>
+        <div style="display:flex;justify-content:space-between;align-items:baseline;gap:10px;flex-wrap:wrap"><h4 style="font-size:15.5px">Mi lista de recomendaciones <span class="mono" id="rcCount"></span></h4><button class="btn sm dark" id="rcCopy">Copiar la lista</button></div>
+        <div id="rcList" style="display:flex;flex-direction:column;gap:8px;margin-top:8px"></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ======================= INTEGRADOR ======================= -->
+<section data-view="integrador" hidden>
+  <div class="uband">
+    <div class="big">TI</div>
+    <div>
+      <h2>Del presupuesto al valor público</h2>
+      <p>Cada equipo analiza una entidad pública real para responder: <b style="color:var(--accent)">¿la entidad convierte su presupuesto en resultados para la población y qué debería cambiar para lograrlo?</b> Equipos de 3 o 4; periodo 2023–2025 y el avance de 2026.</p>
+    </div>
+  </div>
+
+  <div class="grid2">
+    <div class="card" style="display:flex;flex-direction:column;gap:12px">
+      <h3 style="font-size:18px">Tu avance</h3>
+      <div class="prog-row">
+        <svg class="ring" viewBox="0 0 84 84" id="ringAll" role="img" aria-label="Avance total"></svg>
+        <div style="flex:1;min-width:180px;display:flex;flex-direction:column;gap:8px" id="progUnits"></div>
+      </div>
+      <p class="note">Se guarda en este navegador.</p>
+      <div class="btns"><button class="btn sm" id="ckReset">Reiniciar mi avance</button><span class="note" id="ckResetMsg" aria-live="polite"></span></div>
+    </div>
+    <div class="card" style="display:flex;flex-direction:column;gap:12px">
+      <h3 style="font-size:18px">Cómo se califica</h3>
+      <div id="rubricBars" style="display:flex;flex-direction:column;gap:8px"></div>
+      <p class="note">Cada criterio se califica de 1 a 4. Nota = Σ (peso × puntaje) ÷ 4 × 20.</p>
+    </div>
+  </div>
+
+  <div class="panel">
+    <div class="panel-head"><div><h3>Lista de pasos por sección del informe</h3><p>Marca cada paso cuando lo termines. “Practicar” te lleva a la herramienta que ayuda con ese paso.</p></div></div>
+    <div class="panel-body" id="ckList"></div>
+  </div>
+
+  <div class="panel">
+    <div class="panel-head"><div><h3>Los siete indicadores obligatorios</h3><p>Calcúlalos para cada año; la plantilla de Excel ya trae las fórmulas y la calculadora de la Unidad 3 los interpreta.</p></div><button class="btn sm" data-go="unidad-3" data-target="sim-embudo">Abrir la calculadora</button></div>
+    <div class="panel-body"><div class="tw"><table>
+      <thead><tr><th>Indicador</th><th>Fórmula</th><th>Qué revela</th></tr></thead>
+      <tbody>
+        <tr><td>Avance de ejecución</td><td class="mono">Devengado / PIM</td><td>Capacidad de convertir el presupuesto en gasto</td></tr>
+        <tr><td>Variación presupuestal</td><td class="mono">(PIM − PIA) / PIA</td><td>Cuánto cambió el presupuesto; realismo de la formulación</td></tr>
+        <tr><td>Concentración de fin de año</td><td class="mono">Devengado oct–dic / anual</td><td>Si el gasto se acumula al cierre</td></tr>
+        <tr><td>Peso del gasto de capital</td><td class="mono">(2.6 + 2.7) / devengado</td><td>Orientación a la inversión</td></tr>
+        <tr><td>Dependencia de RO</td><td class="mono">PIM con RO / PIM</td><td>Vulnerabilidad ante recortes</td></tr>
+        <tr><td>Brecha compromiso–devengado</td><td class="mono">(Comp. − dev.) / comp.</td><td>Lo contratado que aún no se recibe</td></tr>
+        <tr><td>Brecha devengado–girado</td><td class="mono">(Dev. − girado) / dev.</td><td>Obligaciones que tesorería no paga</td></tr>
+      </tbody></table></div></div>
+  </div>
+
+  <div class="grid2">
+    <div class="panel">
+      <div class="panel-head"><div><h3>Errores frecuentes</h3><p>Lo que más resta puntos.</p></div></div>
+      <div class="panel-body"><div style="display:flex;flex-direction:column;gap:10px" id="errores"></div></div>
+    </div>
+    <div class="panel">
+      <div class="panel-head"><div><h3>Fuentes oficiales</h3><p>Solo datos verificables, con fecha de consulta.</p></div></div>
+      <div class="panel-body">
+        <ul class="clean" style="font-size:14px">
+          <li><a href="https://www.mef.gob.pe/es/seguimiento-de-la-ejecucion-presupuestal-consulta-amigable" target="_blank" rel="noopener">Consulta Amigable del MEF</a>: PIA, PIM y ejecución por fuente, genérica, categoría y mes.</li>
+          <li><a href="https://www.mef.gob.pe/es/portal-de-transparencia-economica" target="_blank" rel="noopener">Portal de Transparencia Económica</a>: ingresos, transferencias e inversiones.</li>
+          <li><a href="https://www.mef.gob.pe/es/inversion-publica-sp-21787" target="_blank" rel="noopener">Inversión pública – Invierte.pe</a>: banco y seguimiento de inversiones.</li>
+          <li><a href="https://www.gob.pe/institucion/mef/normas-legales/7475743-32513" target="_blank" rel="noopener">Ley N.° 32513, Ley de Presupuesto 2026</a>.</li>
+          <li><a href="https://www.gob.pe/institucion/ceplan/informes-publicaciones/5661161-guia-para-el-planeamiento-institucional-actualizada-2024" target="_blank" rel="noopener">Guía para el planeamiento institucional (CEPLAN)</a>: para ubicar el PEI y el POI.</li>
+          <li><a href="https://www.gob.pe/contraloria" target="_blank" rel="noopener">Contraloría General de la República</a>: informes de control publicados.</li>
+        </ul>
+        <div class="callout"><span class="ic">!</span><div><b>Integridad académica:</b> toda cifra lleva fuente y fecha; las normas se citan vigentes (Ley 32069, no la Ley 30225); el uso de inteligencia artificial se declara al final del informe.</div></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="grid4">
+    <div class="mini"><span class="k">ENTREGABLE 1</span><h4>Informe</h4><p>15 a 20 páginas sin anexos, Arial 11, APA 7.ª edición.</p></div>
+    <div class="mini"><span class="k">ENTREGABLE 2</span><h4>Base de datos</h4><p>La plantilla de Excel con consultas, indicadores y fechas.</p></div>
+    <div class="mini"><span class="k">ENTREGABLE 3</span><h4>Video</h4><p>10 minutos como máximo; exponen todos y cierran con las cinco recomendaciones.</p></div>
+    <div class="mini"><span class="k">ENTREGABLE 4</span><h4>Declaración de roles</h4><p>Media página con lo que aportó cada integrante.</p></div>
+  </div>
+</section>
+
+<!-- ======================= QUIZ ======================= -->
+<section data-view="quiz" hidden>
+  <div class="secthead"><h2>Autoevaluación</h2><span>26 preguntas de decisión y de conceptos. Las opciones cambian de orden en cada intento.</span></div>
+  <div class="panel">
+    <div class="panel-head" style="align-items:center">
+      <div class="seg" id="quizFilter"><button data-v="all" aria-pressed="true">Todas</button><button data-v="1" aria-pressed="false">U1</button><button data-v="2" aria-pressed="false">U2</button><button data-v="3" aria-pressed="false">U3</button><button data-v="4" aria-pressed="false">U4</button></div>
+      <div class="qbar" id="qbar"></div>
+    </div>
+    <div class="panel-body" id="quizBody"></div>
+  </div>
+</section>
+
+<!-- ======================= GLOSARIO ======================= -->
+<section data-view="glosario" hidden>
+  <div class="secthead"><h2>Glosario</h2><span>Términos del curso, con la unidad donde se trabajan.</span></div>
+  <label class="fld" for="glq" style="max-width:420px">Buscar término<input type="text" id="glq" placeholder="Ej.: PIM, devengado, IOARR"></label>
+  <div class="gl" id="glList"></div>
+  <div class="card">
+    <h3 style="font-size:17px;margin-bottom:8px">Normas del curso</h3>
+    <ul class="clean" style="font-size:14px">
+      <li>Decreto Legislativo N.° 1440, del Sistema Nacional de Presupuesto Público.</li>
+      <li>Ley N.° 32513, Ley de Presupuesto del Sector Público para el año fiscal 2026.</li>
+      <li>Decreto Legislativo N.° 1436, Marco de la Administración Financiera del Sector Público.</li>
+      <li>Decreto Legislativo N.° 1252, que crea el Sistema Nacional de Programación Multianual y Gestión de Inversiones.</li>
+      <li>Ley N.° 32069, Ley General de Contrataciones Públicas.</li>
+      <li>Directiva N.° 0003-2024-EF/50.01, de evaluación presupuestaria.</li>
+    </ul>
+  </div>
+</section>
+
+<footer>
+  <span>Laboratorio de Presupuesto e Inversión Pública · Curso Presupuesto e Inversión Pública · Maestría en Gestión Pública.</span>
+  <span><b style="color:var(--ink)">Autor: Gilmer Sánchez Valenzuela</b> · Candidato a Doctor en Economía, UCM España · Especialista en control gubernamental y finanzas públicas.</span>
+  <span>Los datos de ejemplo corresponden a una entidad ficticia y sirven para aprender. No reemplazan la normativa vigente ni las cifras oficiales.</span>
+</footer>
+</main>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script>
+"use strict";
+/* ================= utilidades ================= */
+const $ = (s, r = document) => r.querySelector(s);
+const $$ = (s, r = document) => [...r.querySelectorAll(s)];
+const css = n => getComputedStyle(document.documentElement).getPropertyValue(n).trim();
+const NB = " ";
+function fmt(n, d = 0) {
+  if (!isFinite(n)) return "—";
+  const neg = n < 0; n = Math.abs(n);
+  let [i, f] = n.toFixed(d).split(".");
+  i = i.replace(/\B(?=(\d{3})+(?!\d))/g, NB);
+  return (neg ? "−" : "") + i + (f ? "," + f : "");
+}
+const fmtS = (n, d = 0) => (n < 0 ? "−S/" + NB + fmt(-n, d) : "S/" + NB + fmt(n, d));
+const pct = (x, d = 1) => fmt(x * 100, d) + NB + "%";
+const esc = s => String(s ?? "").replace(/[&<>"]/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
+const store = {
+  get(k, def) { try { const v = localStorage.getItem(k); return v ? JSON.parse(v) : def; } catch (e) { return def; } },
+  set(k, v) { try { localStorage.setItem(k, JSON.stringify(v)); } catch (e) { } }
+};
+function shuffle(a) { a = a.slice(); for (let i = a.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [a[i], a[j]] = [a[j], a[i]]; } return a; }
+function mulberry32(a) { return function () { a |= 0; a = a + 0x6D2B79F5 | 0; let t = Math.imul(a ^ a >>> 15, 1 | a); t = t + Math.imul(t ^ t >>> 7, 61 | t) ^ t; return ((t ^ t >>> 14) >>> 0) / 4294967296; }; }
+const REDUCED = matchMedia("(prefers-reduced-motion: reduce)").matches;
+const HAS3D = typeof THREE !== "undefined";
+
+/* ================= motor 3D ================= */
+function roundRectPath(ctx, x, y, w, h, r) {
+  ctx.beginPath(); ctx.moveTo(x + r, y); ctx.lineTo(x + w - r, y); ctx.quadraticCurveTo(x + w, y, x + w, y + r);
+  ctx.lineTo(x + w, y + h - r); ctx.quadraticCurveTo(x + w, y + h, x + w - r, y + h); ctx.lineTo(x + r, y + h);
+  ctx.quadraticCurveTo(x, y + h, x, y + h - r); ctx.lineTo(x, y + r); ctx.quadraticCurveTo(x, y, x + r, y); ctx.closePath();
+}
+function makeLabel(text, { size = 0.4, color = css("--ink"), weight = 600, bg = null } = {}) {
+  const c = document.createElement("canvas"), ctx = c.getContext("2d"), fs = 64;
+  const font = `${weight} ${fs}px Inter, "Segoe UI", system-ui, sans-serif`;
+  ctx.font = font;
+  const w = Math.ceil(ctx.measureText(text).width) + (bg ? 44 : 14), h = Math.ceil(fs * 1.35);
+  c.width = w; c.height = h;
+  ctx.font = font; ctx.textAlign = "center"; ctx.textBaseline = "middle";
+  if (bg) { ctx.fillStyle = bg; roundRectPath(ctx, 2, 2, w - 4, h - 4, h / 2.4); ctx.fill(); }
+  ctx.fillStyle = color; ctx.fillText(text, w / 2, h / 2 + 3);
+  const tex = new THREE.CanvasTexture(c); tex.minFilter = THREE.LinearFilter;
+  const mat = new THREE.SpriteMaterial({ map: tex, transparent: true, depthTest: false, depthWrite: false });
+  const s = new THREE.Sprite(mat); s.scale.set(size * w / h, size, 1); s.renderOrder = 10;
+  return s;
+}
+function disposeObj(o) {
+  o.traverse(x => {
+    if (x.geometry) x.geometry.dispose();
+    if (x.material) { if (x.material.map) x.material.map.dispose(); x.material.dispose(); }
+  });
+}
+class Chart3D {
+  constructor(host, o = {}) {
+    this.host = host; this.ok = false;
+    this.o = Object.assign({ R: 18, phi: 1.02, theta: 0.6, target: [0, 1.6, 0], auto: true, minPhi: 0.3, maxPhi: 1.48 }, o);
+    if (!HAS3D) { this.fail(); return; }
+    try {
+      this.renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
+    } catch (e) { this.fail(); return; }
+    this.ok = true;
+    this.renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
+    this.canvas = this.renderer.domElement;
+    host.insertBefore(this.canvas, host.firstChild);
+    this.scene = new THREE.Scene();
+    this.camera = new THREE.PerspectiveCamera(34, 1, 0.1, 400);
+    this.scene.add(new THREE.HemisphereLight(0xffffff, 0x5a6a78, 0.95));
+    const dl = new THREE.DirectionalLight(0xffffff, 0.75); dl.position.set(10, 18, 12); this.scene.add(dl);
+    const dl2 = new THREE.DirectionalLight(0xffffff, 0.25); dl2.position.set(-12, 8, -6); this.scene.add(dl2);
+    this.bars = new THREE.Group(); this.labels = new THREE.Group(); this.deco = new THREE.Group();
+    this.scene.add(this.bars, this.labels, this.deco);
+    this.items = new Map(); this.clickables = []; this.inView = true; this.drag = null; this.idle = 0;
+    this.theta = this.o.theta; this.phi = this.o.phi; this.R = this.o.R;
+    const c = this.canvas;
+    c.addEventListener("pointerdown", e => { this.drag = { x: e.clientX, y: e.clientY, moved: 0 }; try { c.setPointerCapture(e.pointerId); } catch (_) { } });
+    c.addEventListener("pointermove", e => {
+      if (!this.drag) return;
+      const dx = e.clientX - this.drag.x, dy = e.clientY - this.drag.y;
+      this.drag.moved += Math.abs(dx) + Math.abs(dy); this.drag.x = e.clientX; this.drag.y = e.clientY;
+      this.theta -= dx * 0.008; this.phi = Math.min(this.o.maxPhi, Math.max(this.o.minPhi, this.phi - dy * 0.006)); this.idle = 0;
+    });
+    c.addEventListener("pointerup", e => { if (this.drag && this.drag.moved < 6 && this.onClick) this.pick(e); this.drag = null; });
+    c.addEventListener("pointercancel", () => { this.drag = null; });
+    c.addEventListener("pointermove", e => { if (!this.onClick || this.drag) return; c.style.cursor = this.hit(e) ? "pointer" : "grab"; });
+    new ResizeObserver(() => this.resize()).observe(host);
+    new IntersectionObserver(es => { this.inView = es[0].isIntersecting; }).observe(host);
+    this.resize();
+    Chart3D.all.push(this);
+  }
+  fail() {
+    const p = document.createElement("p");
+    p.className = "note"; p.style.cssText = "position:absolute;inset:0;display:grid;place-items:center;text-align:center;padding:20px";
+    p.textContent = "Tu navegador no puede mostrar este gráfico 3D. Los cálculos y resultados de al lado siguen funcionando.";
+    this.host.appendChild(p);
+  }
+  hit(e) {
+    const r = this.canvas.getBoundingClientRect();
+    const v = new THREE.Vector2(((e.clientX - r.left) / r.width) * 2 - 1, -((e.clientY - r.top) / r.height) * 2 + 1);
+    const rc = new THREE.Raycaster(); rc.setFromCamera(v, this.camera);
+    return rc.intersectObjects(this.clickables, false)[0];
+  }
+  pick(e) { const h = this.hit(e); if (h) this.onClick(h.object.userData); }
+  resize() {
+    if (!this.ok) return;
+    const w = this.host.clientWidth, h = this.host.clientHeight; if (!w || !h) return;
+    this.renderer.setSize(w, h, false); this.camera.aspect = w / h;
+    this.camera.updateProjectionMatrix();
+  }
+  begin() { if (!this.ok) return; for (const m of this.items.values()) m.userData.seen = false; this.clearDeco(); }
+  clearDeco() { while (this.deco.children.length) { const c = this.deco.children.pop(); disposeObj(c); } }
+  addDeco(o) { this.deco.add(o); return o; }
+  bar(key, { x = 0, z = 0, w = 0.8, d = 0.8, h = 1, color, opacity = 1, label = null, lsize = 0.36, lcolor, lbg = null, lift = 0.32, shape = "box", data = null }) {
+    if (!this.ok) return;
+    let m = this.items.get(key);
+    if (!m || m.userData.shape !== shape || m.userData.w !== w) {
+      if (m) this.drop(key);
+      let g;
+      if (shape === "cyl") g = new THREE.CylinderGeometry(w / 2, w / 2, 1, 28); else g = new THREE.BoxGeometry(w, 1, d);
+      g.translate(0, 0.5, 0);
+      m = new THREE.Mesh(g, new THREE.MeshStandardMaterial({ roughness: 0.5, metalness: 0.06, transparent: true }));
+      m.scale.y = 0.001; m.userData = { shape, w };
+      this.bars.add(m); this.items.set(key, m);
+    }
+    m.position.set(x, 0, z);
+    m.material.color.set(color); m.material.opacity = opacity; m.material.depthWrite = opacity > 0.6;
+    m.userData.th = Math.max(0.001, h); m.userData.seen = true; m.userData.data = data;
+    if (m.userData.lab) { this.labels.remove(m.userData.lab); disposeObj(m.userData.lab); m.userData.lab = null; }
+    m.userData.lift = lift;
+    if (label) { const s = makeLabel(label, { size: lsize, color: lcolor || css("--ink"), bg: lbg }); this.labels.add(s); m.userData.lab = s; }
+    return m;
+  }
+  drop(key) {
+    const m = this.items.get(key); if (!m) return;
+    if (m.userData.lab) { this.labels.remove(m.userData.lab); disposeObj(m.userData.lab); }
+    this.bars.remove(m); disposeObj(m); this.items.delete(key);
+  }
+  end() {
+    if (!this.ok) return;
+    for (const [k, m] of [...this.items]) if (!m.userData.seen) this.drop(k);
+    this.clickables = [...this.items.values()].filter(m => m.userData.data && m.userData.data.nav);
+  }
+  tick(dt) {
+    if (!this.ok || !this.inView) return;
+    if (this.o.auto && !REDUCED && !this.drag) { this.idle += dt; if (this.idle > 2.5) this.theta += dt * 0.1; }
+    for (const m of this.items.values()) {
+      const t = m.userData.th, s = m.scale.y;
+      if (Math.abs(t - s) > 0.0005) m.scale.y = REDUCED ? t : s + (t - s) * Math.min(1, dt * 6);
+      if (m.userData.lab) m.userData.lab.position.set(m.position.x, m.scale.y + (m.userData.lift || 0.32), m.position.z);
+    }
+    const [tx, ty, tz] = this.o.target, R = this.R;
+    this.camera.position.set(tx + R * Math.sin(this.phi) * Math.sin(this.theta), ty + R * Math.cos(this.phi), tz + R * Math.sin(this.phi) * Math.cos(this.theta));
+    this.camera.lookAt(tx, ty, tz);
+    this.renderer.render(this.scene, this.camera);
+  }
+}
+Chart3D.all = [];
+function floor(ch, w, d, { y = 0, color = css("--surface"), edge = css("--line") } = {}) {
+  if (!ch.ok) return;
+  const g = new THREE.BoxGeometry(w, 0.08, d); g.translate(0, y - 0.04, 0);
+  const m = new THREE.Mesh(g, new THREE.MeshStandardMaterial({ color, roughness: 0.9 }));
+  ch.addDeco(m);
+  const e = new THREE.LineSegments(new THREE.EdgesGeometry(g), new THREE.LineBasicMaterial({ color: edge }));
+  ch.addDeco(e);
+}
+function label3(ch, text, x, y, z, opt) { if (!ch.ok) return; const s = makeLabel(text, opt); s.position.set(x, y, z); ch.addDeco(s); return s; }
+function sphere(ch, x, y, z, r, color) { if (!ch.ok) return; const m = new THREE.Mesh(new THREE.SphereGeometry(r, 18, 14), new THREE.MeshStandardMaterial({ color, roughness: 0.4 })); m.position.set(x, y, z); ch.addDeco(m); }
+function tube(ch, a, b, r, color, opacity = 1) {
+  if (!ch.ok) return;
+  const A = new THREE.Vector3(...a), B = new THREE.Vector3(...b), dir = B.clone().sub(A), len = dir.length();
+  const m = new THREE.Mesh(new THREE.CylinderGeometry(r, r, len, 12), new THREE.MeshStandardMaterial({ color, roughness: 0.5, transparent: opacity < 1, opacity }));
+  m.position.copy(A.clone().add(B).multiplyScalar(0.5));
+  m.quaternion.setFromUnitVectors(new THREE.Vector3(0, 1, 0), dir.normalize());
+  ch.addDeco(m);
+}
+let lastT = performance.now();
+function loop(t) {
+  const dt = Math.min(0.05, (t - lastT) / 1000); lastT = t;
+  for (const c of Chart3D.all) if (c.host.offsetParent !== null) c.tick(dt);
+  requestAnimationFrame(loop);
+}
+requestAnimationFrame(loop);
+
+/* re-dibujo al cambiar de tema */
+const renders = [];
+function onRender(fn) { renders.push(fn); }
+function rerenderAll() { renders.forEach(f => { try { f(); } catch (e) { console.error(e); } }); }
+matchMedia("(prefers-color-scheme: dark)").addEventListener("change", () => setTimeout(rerenderAll, 30));
+new MutationObserver(() => setTimeout(rerenderAll, 30)).observe(document.documentElement, { attributes: true, attributeFilter: ["data-theme"] });
+if (document.fonts && document.fonts.ready) document.fonts.ready.then(() => setTimeout(rerenderAll, 50));
+
+/* ================= navegación ================= */
+const ROUTES = ["inicio", "unidad-1", "unidad-2", "unidad-3", "unidad-4", "integrador", "quiz", "glosario"];
+const inits = {}; const inited = new Set();
+function show(scrollTo) {
+  let h = location.hash.slice(1); if (!ROUTES.includes(h)) h = "inicio";
+  $$("section[data-view]").forEach(v => v.hidden = v.dataset.view !== h);
+  $$(".tabs-nav a").forEach(a => a.getAttribute("href") === "#" + h ? a.setAttribute("aria-current", "page") : a.removeAttribute("aria-current"));
+  const cur = $(`.tabs-nav a[href="#${h}"]`); if (cur) cur.scrollIntoView({ block: "nearest", inline: "nearest" });
+  if (!inited.has(h) && inits[h]) { inited.add(h); try { inits[h](); } catch (e) { console.error(e); } }
+  requestAnimationFrame(() => { Chart3D.all.forEach(c => c.resize()); if (scrollTo) { const el = document.getElementById(scrollTo); if (el) el.scrollIntoView({ behavior: REDUCED ? "auto" : "smooth", block: "start" }); } });
+}
+let pendingScroll = null;
+window.addEventListener("hashchange", () => { show(pendingScroll); if (!pendingScroll) window.scrollTo(0, 0); pendingScroll = null; });
+function goTo(view, target) {
+  if (location.hash.slice(1) === view) { show(target); return; }
+  pendingScroll = target; location.hash = view;
+}
+document.addEventListener("click", e => {
+  const b = e.target.closest("[data-go]"); if (!b) return;
+  e.preventDefault(); goTo(b.dataset.go, b.dataset.target || null);
+});
+
+/* pestañas internas */
+$$("[data-tabs]").forEach(box => {
+  const btns = $$("[data-tab]", box), panels = $$("[data-panel]", box);
+  const sel = k => { btns.forEach(b => b.setAttribute("aria-selected", b.dataset.tab === k)); panels.forEach(p => p.hidden = p.dataset.panel !== k); };
+  btns.forEach(b => b.addEventListener("click", () => sel(b.dataset.tab)));
+  sel(btns[0].dataset.tab);
+});
+
+/* tarjetas volteables */
+function flips(host, items) {
+  host.innerHTML = items.map(([t, f, b]) => `<button class="flip" aria-expanded="false"><b>${esc(t)}</b><span class="front">${esc(f)}</span><span class="back">${esc(b)}</span></button>`).join("");
+  $$(".flip", host).forEach(x => x.addEventListener("click", () => x.setAttribute("aria-expanded", x.getAttribute("aria-expanded") !== "true")));
+}
+function kpis(host, list) {
+  host.innerHTML = list.map(k => `<div class="kpi ${k.c || ""}"><span>${esc(k.l)}</span><b>${k.v}</b></div>`).join("");
+}
+</script>
+<script>
+"use strict";
+const fM = v => "S/" + NB + fmt(v, 1) + NB + "M";
+/* ================= INICIO ================= */
+inits["inicio"] = () => {
+  const ch = new Chart3D($("#heroStage"), { R: 19, phi: 1.08, theta: 0.5, target: [0, 2.2, 0] });
+  ch.onClick = d => goTo(d.nav);
+  const U = [["U1 Sistemas", "unidad-1", 2.4], ["U2 Estructura", "unidad-2", 3.3], ["U3 Ciclo", "unidad-3", 4.2], ["U4 Inversión", "unidad-4", 5.1]];
+  function draw() {
+    if (!ch.ok) return;
+    ch.begin(); floor(ch, 15, 8);
+    U.forEach(([t, nav, h], i) => ch.bar("u" + i, { x: (i - 1.5) * 3.4, z: 0, w: 1.7, d: 1.7, h, color: i % 2 ? css("--accent") : css("--band"), label: t, lsize: 0.5, lbg: css("--surface"), lift: 0.75, data: { nav } }));
+    const rnd = mulberry32(5);
+    for (let k = 0; k < 22; k++) {
+      const x = (rnd() - 0.5) * 13.5, z = (rnd() - 0.5) * 7; if (Math.abs(z) < 2.3 && Math.abs(x) < 6.4) continue;
+      ch.bar("c" + k, { x, z, w: 0.62, h: 0.12 + Math.floor(rnd() * 6) * 0.12, color: rnd() < 0.5 ? css("--accent") : css("--teal"), shape: "cyl" });
+    }
+    ch.end();
+  }
+  draw(); onRender(draw);
+};
+
+/* ================= UNIDAD 1 ================= */
+inits["unidad-1"] = () => {
+  flips($("#sisFlips"), [
+    ["Planeamiento estratégico", "CEPLAN · PEI y POI", "Define los objetivos y las actividades. Sin él, el presupuesto financia inercias en lugar de prioridades."],
+    ["Presupuesto público", "DGPP · DL 1440", "Asigna y controla los créditos. Financia lo que el plan prioriza, dentro de los límites fiscales."],
+    ["Abastecimiento", "DGA · PAC y contratos", "Provee bienes, servicios y obras a tiempo. Es el cuello de botella más frecuente de la ejecución."],
+    ["Tesorería", "DGTP · caja y pagos", "Gestiona los fondos y paga las obligaciones devengadas en el momento oportuno."],
+    ["Endeudamiento", "DGTP · deuda pública", "Financia inversión con crédito sin comprometer la sostenibilidad fiscal."],
+    ["Contabilidad", "DGCP · registro", "Registra las operaciones y produce información confiable para rendir cuentas."],
+    ["Inversión pública", "DGPMI · Invierte.pe", "Prioriza y ejecuta inversiones que cierran brechas y que luego deben funcionar."],
+    ["Gestión fiscal de los RR. HH.", "Planillas", "Mantiene un costo de personal sostenible y registrado."],
+  ]);
+  const ST = [
+    ["Certificación", "Presupuesto", "La Oficina de Presupuesto garantiza que hay crédito disponible y libre de afectación para la finalidad del gasto. Sin certificación no se puede convocar ni contratar."],
+    ["Compromiso", "Abastecimiento", "Se formaliza la obligación con un tercero mediante un contrato u orden. Un proceso de selección que se declara desierto deja el crédito certificado sin comprometer."],
+    ["Devengado", "Área usuaria y contabilidad", "El área usuaria da conformidad a la entrega del bien, servicio u obra; se reconoce la obligación de pago. Obras sin valorizar dejan compromisos sin devengar."],
+    ["Pago", "Tesorería", "Tesorería transfiere los fondos y extingue la obligación. Una brecha grande entre devengado y girado indica problemas de caja o de trámite."],
+  ];
+  let st = 0;
+  function drawSt() {
+    $("#gastoFlow").innerHTML = ST.map(([a, b], i) => `<button class="st" aria-pressed="${i === st}" data-i="${i}"><b>${i + 1}. ${a}</b><span>${b}</span></button>`).join("");
+    $("#gastoDetail").innerHTML = `<b>${ST[st][0]}.</b> ${ST[st][2]}`;
+    $$("#gastoFlow .st").forEach(b => b.addEventListener("click", () => { st = +b.dataset.i; drawSt(); }));
+  }
+  drawSt();
+
+  // simulador de valor público
+  const F = [["ej", "Ejecución presupuestal (devengado / PIM)"], ["pert", "Pertinencia: responde a una brecha del PEI"], ["cal", "Calidad técnica y supervisión de la obra"], ["om", "Operación y mantenimiento financiados"], ["uso", "Uso por la población"]];
+  const P = { losa: [98, 60, 50, 20, 30], art: [92, 90, 85, 90, 85], baja: [55, 90, 85, 80, 85] };
+  $("#vpSliders").innerHTML = F.map(([k, t]) => `<div class="range-row"><label class="fld" for="vp_${k}">${t}</label><output id="vp_${k}o"></output><input type="range" id="vp_${k}" min="0" max="100" step="1" style="grid-column:1/-1"></div>`).join("");
+  const set = arr => F.forEach(([k], i) => $("#vp_" + k).value = arr[i]);
+  set(P.losa);
+  const SYS = { pert: "planeamiento (PEI, POI y programación multianual)", cal: "abastecimiento e inversión (expediente técnico y supervisión)", om: "presupuesto (gasto corriente para operar y mantener)", uso: "orientación a la población (diseño con los usuarios)" };
+  const ch = new Chart3D($("#vpStage"), { R: 17, phi: 1.12, theta: 0.6, target: [0, 2.2, 0] });
+  function draw() {
+    const v = Object.fromEntries(F.map(([k]) => [k, +$("#vp_" + k).value]));
+    F.forEach(([k]) => $("#vp_" + k + "o").textContent = v[k] + NB + "%");
+    const e1 = v.ej, e2 = e1 * (v.pert + v.cal) / 200, e3 = e2 * (0.3 + 0.7 * v.om / 100), e4 = e3 * (0.3 + 0.7 * v.uso / 100);
+    kpis($("#vpKpis"), [
+      { l: "Gasto ejecutado", v: "S/" + NB + fmt(e1), c: e1 >= 90 ? "good" : e1 >= 75 ? "warn" : "crit" },
+      { l: "Gasto efectivo", v: "S/" + NB + fmt(e2) },
+      { l: "Servicio sostenible", v: "S/" + NB + fmt(e3) },
+      { l: "Valor público", v: "S/" + NB + fmt(e4), c: "acc" },
+      { l: "Valor por cada sol ejecutado", v: e1 ? fmt(e4 / e1, 2) : "—" },
+    ]);
+    const weak = ["pert", "cal", "om", "uso"].sort((a, b) => v[a] - v[b])[0];
+    let msg = `De cada S/ 100 de presupuesto se ejecutan <b>S/ ${fmt(e1)}</b>, pero solo <b>S/ ${fmt(e4)}</b> llegan a ser valor público. `;
+    if (e1 >= 90 && e4 < 40) msg += `Alta ejecución no es buen desempeño. `;
+    if (e1 < 70 && e4 / Math.max(e1, 1) > 0.6) msg += `Lo que se ejecuta rinde bien, pero se ejecuta poco: el problema está en la capacidad de gasto, no en la calidad. `;
+    msg += `El eslabón más débil es <b>${F.find(f => f[0] === weak)[1].toLowerCase()}</b> (${v[weak]} %): revisa el sistema de ${SYS[weak]}.`;
+    $("#vpInsight").innerHTML = msg;
+    if (!ch.ok) return;
+    ch.begin(); floor(ch, 14, 4.4);
+    const S = [["Presupuesto", 100, css("--band")], ["Ejecutado", e1, css("--teal")], ["Efectivo", e2, css("--teal")], ["Sostenible", e3, css("--accent")], ["Valor público", e4, css("--accent")]];
+    S.forEach(([n, val, c], i) => {
+      const x = (i - 2) * 2.5;
+      ch.bar("v" + i, { x, w: 1.7, d: 1.7, h: val / 100 * 5.4, color: c, opacity: i === 2 ? 0.75 : 1, label: "S/ " + fmt(val), lsize: 0.46 });
+      label3(ch, n, x, 0.05, 1.55, { size: 0.36, color: css("--muted") });
+    });
+    ch.end();
+  }
+  F.forEach(([k]) => $("#vp_" + k).addEventListener("input", draw));
+  $$("#vpPresets [data-p]").forEach(b => b.addEventListener("click", () => { set(P[b.dataset.p]); draw(); }));
+  draw(); onRender(draw);
+};
+
+/* ================= UNIDAD 2 ================= */
+const MODELO = {
+  years: ["2023", "2024", "2025", "2026*"],
+  f: { "RO": [11.8, 12.9, 14.2, 15.1], "RDR": [8.7, 9.1, 9.6, 10.2], "ROOC": [0, 4.0, 6.0, 8.0], "DyT": [16.5, 18.8, 21.4, 19.6], "RD": [94.5, 97.5, 105.6, 107.5] },
+  g: { "2.1": [21.4, 22.6, 24.1, 21.0], "2.2": [2.1, 2.2, 2.3, 2.0], "2.3": [33.8, 36.5, 39.9, 32.4], "2.4": [1.2, 1.3, 1.4, 1.1], "2.5": [1.6, 1.7, 1.9, 1.5], "2.6": [31.2, 36.3, 46.2, 26.6], "2.7": [0, 0, 0, 0], "2.8": [0.8, 1.0, 2.1, 1.6] },
+};
+const GEN = { "2.1": "Personal y obligaciones sociales", "2.2": "Pensiones y prestaciones sociales", "2.3": "Bienes y servicios", "2.4": "Donaciones y transferencias", "2.5": "Otros gastos", "2.6": "Adquisición de activos no financieros", "2.7": "Adquisición de activos financieros", "2.8": "Servicio de la deuda pública" };
+inits["unidad-2"] = () => {
+  // clasificador
+  const CL = [
+    ["Remuneraciones del personal nombrado de la municipalidad", "2.1", "Pago al personal y sus obligaciones sociales."],
+    ["Pensiones de cesantes del régimen del DL 20530", "2.2", "Pensiones y otras prestaciones sociales."],
+    ["Combustible para los camiones de limpieza pública", "2.3", "Insumo que se consume en la operación: bienes y servicios."],
+    ["Mantenimiento rutinario de vías vecinales por servicio de terceros", "2.3", "El mantenimiento no crea un activo nuevo: es un servicio."],
+    ["Equipos de cómputo para un centro de atención ciudadana", "2.6", "Equipamiento duradero: adquisición de activos no financieros."],
+    ["Construcción de pistas y veredas", "2.6", "Obra que crea un activo: adquisición de activos no financieros."],
+    ["Elaboración del expediente técnico de una obra", "2.6", "Es parte del costo de la inversión, que se registra en activos no financieros."],
+    ["Transferencia a una municipalidad distrital para un convenio", "2.4", "Recursos que pasan a otra entidad: donaciones y transferencias."],
+    ["Pago de una sentencia judicial en calidad de cosa juzgada", "2.5", "Las sentencias judiciales se registran en otros gastos."],
+    ["Subvenciones económicas a personas naturales de un programa social", "2.5", "Las subvenciones a personas naturales están en otros gastos."],
+    ["Aporte de capital a una empresa municipal", "2.7", "Adquirir participación de capital es un activo financiero."],
+    ["Intereses y amortización de un préstamo", "2.8", "Servicio de la deuda pública."],
+  ];
+  let ans = {};
+  function cls() {
+    $("#clsList").innerHTML = CL.map(([t, ok, ex], i) => {
+      const a = ans[i];
+      return `<div class="mini" style="gap:8px"><b style="font-size:14.5px">${i + 1}. ${t}</b>
+        <select data-i="${i}" aria-label="Genérica para ${esc(t)}"${a ? " disabled" : ""}><option value="">Elige la genérica…</option>${Object.keys(GEN).map(k => `<option value="${k}"${a === k ? " selected" : ""}>${k} ${GEN[k]}</option>`).join("")}</select>
+        ${a ? `<div class="fb ${a === ok ? "ok" : "bad"}"><b>${a === ok ? "Correcto." : "Es " + ok + "."}</b> ${ex}</div>` : ""}</div>`;
+    }).join("");
+    const n = Object.keys(ans).length, k = Object.entries(ans).filter(([i, a]) => CL[i][1] === a).length;
+    $("#clsScore").textContent = `${k} de ${n} correctas · ${CL.length - n} pendientes`;
+  }
+  $("#clsList").addEventListener("change", e => { const i = e.target.dataset.i; if (i == null || !e.target.value) return; ans[+i] = e.target.value; cls(); });
+  $("#clsReset").addEventListener("click", () => { ans = {}; cls(); });
+  cls();
+
+  // mapa 3D
+  let view = "f";
+  const ch = new Chart3D($("#mapStage"), { R: 18, phi: 0.98, theta: 0.55, target: [0, 1.4, 0] });
+  const colF = () => [css("--teal"), css("--good"), css("--crit"), css("--warn"), css("--accent")];
+  const colG = k => k === "2.8" ? css("--crit") : (k === "2.6" || k === "2.7") ? css("--accent") : css("--teal");
+  function draw() {
+    const D = view === "f" ? MODELO.f : MODELO.g, keys = Object.keys(D), Y = MODELO.years;
+    const tot = Y.map((_, j) => keys.reduce((s, k) => s + D[k][j], 0));
+    $("#mapLegend").innerHTML = view === "f" ? keys.map((k, i) => `<span><i style="background:${colF()[i]}"></i>${k}</span>`).join("") :
+      `<span><i style="background:var(--teal)"></i>Corriente</span><span><i style="background:var(--accent)"></i>Capital</span><span><i style="background:var(--crit)"></i>Deuda</span>`;
+    $("#mapTable").innerHTML = `<table><thead><tr><th>${view === "f" ? "Fuente" : "Genérica"}</th>${Y.map(y => `<th class="r">${y}</th>`).join("")}</tr></thead><tbody>` +
+      keys.map(k => `<tr><td>${view === "f" ? k : k + " " + GEN[k].split(" ").slice(0, 3).join(" ")}</td>${D[k].map((v, j) => `<td class="r num">${fmt(v, 1)} <span class="note">${pct(tot[j] ? v / tot[j] : 0, 0)}</span></td>`).join("")}</tr>`).join("") +
+      `<tr class="tot"><td>${view === "f" ? "PIM" : "Devengado"}</td>${tot.map(t => `<td class="r num">${fmt(t, 1)}</td>`).join("")}</tr></tbody></table>`;
+    const j = 2;
+    $("#mapInsight").innerHTML = view === "f" ?
+      `En 2025, <b>${pct(MODELO.f.RD[j] / tot[j], 0)} del PIM son recursos determinados</b> (canon, FONCOMUN, impuestos municipales) y solo ${pct(MODELO.f.RO[j] / tot[j], 0)} son RO. Baja dependencia de RO no es autonomía: el canon es volátil. Desde 2024 aparece endeudamiento (ROOC). *2026: PIM a la fecha.` :
+      `En 2025 la inversión (2.6) llega a <b>${pct(MODELO.g["2.6"][j] / tot[j], 0)} del devengado</b> y bienes y servicios a ${pct(MODELO.g["2.3"][j] / tot[j], 0)}. El servicio de la deuda (2.8) se duplica tras los préstamos. *2026: devengado al 31 de octubre.`;
+    if (!ch.ok) return;
+    ch.begin();
+    const nx = keys.length, sx = view === "f" ? 2.1 : 1.45, sz = 1.6;
+    floor(ch, nx * sx + 1.4, Y.length * sz + 1.6);
+    const mx = Math.max(...keys.flatMap(k => D[k]));
+    keys.forEach((k, i) => {
+      const x = (i - (nx - 1) / 2) * sx;
+      Y.forEach((y, jj) => {
+        const z = (jj - 1.5) * sz, v = D[k][jj];
+        ch.bar(`${view}${i}-${jj}`, { x, z, w: sx * 0.55, d: sz * 0.55, h: v / mx * 4.6, color: view === "f" ? colF()[i] : colG(k), opacity: jj === 3 ? 0.55 : 1, label: jj === 2 && v ? fmt(v, 1) : null, lsize: 0.3 });
+      });
+      label3(ch, k, x, 0.05, (Y.length / 2) * sz + 0.55, { size: 0.36, color: css("--muted") });
+    });
+    Y.forEach((y, jj) => label3(ch, y, -(nx / 2) * sx - 0.6, 0.05, (jj - 1.5) * sz, { size: 0.34, color: css("--muted") }));
+    ch.end();
+  }
+  $$("#mapView button").forEach(b => b.addEventListener("click", () => { $$("#mapView button").forEach(x => x.setAttribute("aria-pressed", x === b)); view = b.dataset.v; draw(); }));
+  draw(); onRender(draw);
+};
+
+/* ================= UNIDAD 3 ================= */
+const EMB_F = [["pia", "PIA"], ["pim", "PIM"], ["cert", "Certificado"], ["comp", "Compromiso anual"], ["dev", "Devengado"], ["gir", "Girado"], ["ro", "PIM con RO"], ["q4", "Devengado oct–dic"], ["cap", "Devengado 2.6 + 2.7"]];
+const EMB_EX = { pia: 110.5, pim: 156.8, cert: 147.2, comp: 139.0, dev: 117.9, gir: 112.6, ro: 14.2, q4: 47.7, cap: 46.2 };
+inits["unidad-3"] = () => {
+  let mode = "ex", mine = store.get("pip-mine", { pia: "", pim: "", cert: "", comp: "", dev: "", gir: "", ro: "", q4: "", cap: "" });
+  $("#embInputs").innerHTML = EMB_F.map(([k, t]) => `<label class="fld" for="emb_${k}">${t} (S/ M)<input type="number" id="emb_${k}" min="0" step="0.1"></label>`).join("");
+  const fill = o => EMB_F.forEach(([k]) => $("#emb_" + k).value = o[k]);
+  const ch = new Chart3D($("#embStage"), { R: 17, phi: 1.1, theta: 0.5, target: [0, 2.0, 0] });
+  function setMode(m) {
+    mode = m; fill(m === "ex" ? EMB_EX : mine);
+    $("#embMode").innerHTML = m === "ex" ? "Ejemplo: Municipalidad Provincial Modelo, 2025. Cambia cualquier cifra para ver el efecto." : "Mi entidad: escribe las cifras de un año en millones de soles. Se guardan en este navegador.";
+    draw();
+  }
+  EMB_F.forEach(([k]) => $("#emb_" + k).addEventListener("input", () => { if (mode === "mine") { mine[k] = $("#emb_" + k).value; store.set("pip-mine", mine); } draw(); }));
+  $("#embEx").addEventListener("click", () => setMode("ex"));
+  $("#embMine").addEventListener("click", () => setMode("mine"));
+  const lv = (v, g, w) => v <= g ? "good" : v <= w ? "warn" : "crit";
+  function draw() {
+    const v = Object.fromEntries(EMB_F.map(([k]) => [k, parseFloat($("#emb_" + k).value) || 0]));
+    const ok = v.pim > 0;
+    const I = ok ? [
+      ["Avance de ejecución", v.dev / v.pim, v.dev / v.pim >= 0.9 ? "good" : v.dev / v.pim >= 0.75 ? "warn" : "crit", "Capacidad de convertir el presupuesto en gasto. Si el año no ha cerrado, compáralo con el avance esperado a la fecha."],
+      ["Variación presupuestal", v.pia ? (v.pim - v.pia) / v.pia : NaN, v.pia ? lv(Math.abs((v.pim - v.pia) / v.pia), 0.15, 0.3) : "", "Una variación alta revela una formulación que no anticipó saldos de balance ni transferencias."],
+      ["Concentración de fin de año", v.dev ? v.q4 / v.dev : NaN, v.dev ? lv(v.q4 / v.dev, 0.3, 0.4) : "", "Gasto acumulado al cierre: PCA y compras mal programadas."],
+      ["Peso del gasto de capital", v.dev ? v.cap / v.dev : NaN, "", "Orientación a la inversión; léelo junto con el avance de las obras."],
+      ["Dependencia de RO", v.ro / v.pim, "", "Vulnerabilidad ante recortes del Gobierno Nacional. Baja dependencia no es autonomía si el resto es canon."],
+      ["Brecha compromiso–devengado", v.comp ? (v.comp - v.dev) / v.comp : NaN, v.comp ? lv((v.comp - v.dev) / v.comp, 0.05, 0.15) : "", "Bienes, servicios u obras contratados que aún no se reciben."],
+      ["Brecha devengado–girado", v.dev ? (v.dev - v.gir) / v.dev : NaN, v.dev ? lv((v.dev - v.gir) / v.dev, 0.05, 0.10) : "", "Obligaciones reconocidas que tesorería aún no paga."],
+    ] : [];
+    const LBL = { good: "Adecuado", warn: "Revisar", crit: "Crítico" };
+    $("#embInd").innerHTML = ok ? I.map(([n, x, c, t]) => `<div class="mini"><div style="display:flex;justify-content:space-between;align-items:baseline;gap:8px"><b>${n}</b>${c ? `<span class="tag" style="background:var(--${c}-soft);color:var(--${c})">${LBL[c]}</span>` : `<span class="tag">Contexto</span>`}</div><span class="num" style="font-size:22px;font-weight:600">${isFinite(x) ? pct(x) : "—"}</span><p>${t}</p></div>`).join("") : "";
+    if (!ok) { $("#embInsight").innerHTML = "Escribe al menos el PIM y el devengado para calcular los indicadores."; }
+    else {
+      const steps = [["PIM", "certificado", v.pim - v.cert, "programación y requerimientos: las áreas no llegan a certificar lo que tienen (planeamiento y presupuesto)"],
+        ["certificado", "compromiso", v.cert - v.comp, "abastecimiento: procesos de selección que no se concretan a tiempo"],
+        ["compromiso", "devengado", v.comp - v.dev, "la ejecución contractual: obras y servicios contratados que no se reciben ni se valorizan"],
+        ["devengado", "girado", v.dev - v.gir, "tesorería: obligaciones reconocidas que no se pagan"]].filter(s => s[2] > 0).sort((a, b) => b[2] - a[2]);
+      $("#embInsight").innerHTML = steps.length ? `La mayor pérdida está <b>entre ${steps[0][0]} y ${steps[0][1]}: ${fM(steps[0][2])}</b> (${pct(steps[0][2] / v.pim, 0)} del PIM). Revisa ${steps[0][3]}.` : "No hay pérdidas entre etapas: revisa que las cifras sean correctas.";
+    }
+    if (!ch.ok) return;
+    ch.begin(); floor(ch, 15, 4.2);
+    const B = [["PIA", v.pia, css("--muted")], ["PIM", v.pim, css("--band")], ["Certificado", v.cert, css("--teal")], ["Comprometido", v.comp, css("--teal")], ["Devengado", v.dev, css("--accent")], ["Girado", v.gir, css("--good")]];
+    const mx = Math.max(1, ...B.map(b => b[1]));
+    B.forEach(([n, val, c], i) => {
+      const x = (i - 2.5) * 2.2;
+      ch.bar("e" + i, { x, w: 1.5, d: 1.5, h: val / mx * 5, color: c, opacity: i === 0 ? 0.6 : 1, label: val ? fmt(val, 1) + (v.pim && i > 1 ? " · " + pct(val / v.pim, 0) : "") : null, lsize: 0.36 });
+      label3(ch, n, x, 0.05, 1.5, { size: 0.34, color: css("--muted") });
+    });
+    ch.end();
+  }
+  setMode("ex"); onRender(draw);
+
+  // curva mensual
+  const PROF = {
+    modelo: { pim: 156.8, m: [3.6, 5.4, 7.2, 7.8, 8.4, 8.9, 9.3, 9.6, 10.0, 10.6, 12.3, 24.8] },
+    lineal: { pim: 156.8, m: [8, 10, 11, 12, 12.5, 13, 13, 13, 13, 13.5, 14, 15.5] },
+    tardio: { pim: 156.8, m: [1, 1.5, 2, 3, 4, 5, 7, 9, 11, 13, 16, 22] },
+  };
+  let prof = "modelo", myM = store.get("pip-mens", { pim: "", m: Array(12).fill("") });
+  const MES = ["Ene", "Feb", "Mar", "Abr", "May", "Jun", "Jul", "Ago", "Set", "Oct", "Nov", "Dic"];
+  $("#menInputs").innerHTML = MES.map((m, i) => `<label class="fld" for="men${i}">${m}<input type="number" id="men${i}" min="0" step="0.1" value="${myM.m[i]}"></label>`).join("");
+  $("#menPim").value = myM.pim;
+  const mch = new Chart3D($("#menStage"), { R: 16.5, phi: 1.12, theta: 0.42, target: [0, 2.3, 0] });
+  function mdraw() {
+    const P = prof === "mio" ? { pim: parseFloat(myM.pim) || 0, m: myM.m.map(x => parseFloat(x) || 0) } : PROF[prof];
+    const tot = P.m.reduce((a, b) => a + b, 0), q4 = P.m[9] + P.m[10] + P.m[11];
+    let cum = 0; const cums = P.m.map(x => cum += x);
+    const jun = cums[5], mes50 = P.pim ? cums.findIndex(c => c >= P.pim / 2) : -1;
+    kpis($("#menKpis"), [
+      { l: "Avance anual", v: P.pim ? pct(tot / P.pim) : "—", c: !P.pim ? "" : tot / P.pim >= 0.9 ? "good" : tot / P.pim >= 0.75 ? "warn" : "crit" },
+      { l: "Concentración oct–dic", v: tot ? pct(q4 / tot) : "—", c: !tot ? "" : q4 / tot <= 0.3 ? "good" : q4 / tot <= 0.4 ? "warn" : "crit" },
+      { l: "Avance a junio", v: P.pim ? pct(jun / P.pim) : "—" },
+      { l: "Supera 50 % del PIM en", v: mes50 >= 0 ? MES[mes50] : "No llega" },
+    ]);
+    const INS = {
+      modelo: "La Municipalidad Modelo ejecuta poco en el primer semestre y devenga <b>un cuarto de su gasto anual solo en diciembre</b>. Señal de requerimientos tardíos y de una PCA y un PAC que no se programaron por trimestre.",
+      lineal: "Con requerimientos y compras programados desde el inicio, el gasto avanza parejo y supera la mitad del PIM a mitad de año. Así se ve una PCA bien distribuida.",
+      tardio: "Las obras arrancan tarde: medio año casi sin devengar y una carrera al cierre que deja 40 % del PIM sin ejecutar. Riesgo de reversión de saldos y de compras apuradas.",
+      mio: tot ? `Tu entidad concentra ${pct(q4 / tot, 0)} de su devengado entre octubre y diciembre${P.pim ? ` y ejecuta ${pct(tot / P.pim, 0)} del PIM` : ""}. Explica las causas en la sección 3 del informe.` : "Escribe el PIM y el devengado de cada mes de tu entidad (en millones de soles)."
+    };
+    $("#menInsight").innerHTML = INS[prof];
+    if (!mch.ok) return;
+    mch.begin(); floor(mch, 13.6, 4.4);
+    const mx = Math.max(1, ...P.m), H = 5.4;
+    const pts = [];
+    P.m.forEach((x, i) => {
+      const X = (i - 5.5) * 1.05;
+      mch.bar("m" + i, { x: X, w: 0.72, d: 0.72, h: x / mx * 3.6, color: i >= 9 ? css("--accent") : css("--teal"), label: x ? fmt(x, 1) : null, lsize: 0.26 });
+      label3(mch, MES[i], X, 0.05, 1.05, { size: 0.3, color: css("--muted") });
+      if (P.pim) pts.push([X, 0.1 + cums[i] / P.pim * H, -1.1]);
+    });
+    pts.forEach((p, k) => { sphere(mch, ...p, 0.1, css("--crit")); if (k) tube(mch, pts[k - 1], p, 0.035, css("--crit")); });
+    if (pts.length) {
+      label3(mch, pct(cums[11] / P.pim, 0), pts[11][0] + 0.2, pts[11][1] + 0.4, -1.1, { size: 0.32, color: css("--crit") });
+      tube(mch, [pts[0][0], 0.1 + H / 12, -1.1], [pts[11][0], 0.1 + H, -1.1], 0.015, css("--muted"), 0.5);
+      label3(mch, "Ritmo parejo", pts[11][0] - 0.2, 0.1 + H + 0.35, -1.1, { size: 0.26, color: css("--muted") });
+    }
+    mch.end();
+  }
+  $$("#menProf button").forEach(b => b.addEventListener("click", () => { $$("#menProf button").forEach(x => x.setAttribute("aria-pressed", x === b)); prof = b.dataset.v; $("#menMine").hidden = prof !== "mio"; mdraw(); }));
+  $("#menInputs").addEventListener("input", e => { const i = +e.target.id.slice(3); myM.m[i] = e.target.value; store.set("pip-mens", myM); mdraw(); });
+  $("#menPim").addEventListener("input", e => { myM.pim = e.target.value; store.set("pip-mens", myM); mdraw(); });
+  mdraw(); onRender(mdraw);
+
+  // modificaciones
+  const OP = ["Crédito suplementario", "Transferencia de partidas", "Anulación y habilitación"];
+  const MOD = [
+    ["La municipalidad incorpora el saldo de balance de canon que no ejecutó el año anterior.", 0, "Son mayores fondos para el pliego: se incorporan como crédito suplementario (nivel institucional)."],
+    ["El Gobierno Nacional traslada recursos de su pliego a un gobierno regional para una campaña de vacunación.", 1, "Los recursos pasan de un pliego a otro: transferencia de partidas (nivel institucional)."],
+    ["Dentro del pliego, se reduce el crédito de una actividad sin avance y se incrementa el de una obra prioritaria.", 2, "No cambia el total del pliego: anulación y habilitación en el nivel funcional programático."],
+    ["Una ONG dona fondos a la municipalidad para equipar un comedor.", 0, "Las donaciones son mayores fondos que se incorporan al presupuesto: crédito suplementario."],
+    ["Una unidad ejecutora traslada recursos de bienes y servicios a una inversión del mismo pliego.", 2, "Movimiento interno sin cambiar el total: anulación y habilitación, por resolución del titular."],
+    ["Se aprueba un préstamo para financiar un proyecto de saneamiento.", 0, "La operación de endeudamiento aumenta los recursos del pliego: crédito suplementario con fuente ROOC."],
+  ];
+  let mans = {};
+  function mod() {
+    $("#modList").innerHTML = MOD.map(([t, ok, ex], i) => {
+      const a = mans[i];
+      return `<div class="mini" style="gap:8px"><b style="font-size:14.5px">${i + 1}. ${t}</b><div class="btns">${OP.map((o, k) => `<button class="btn sm" data-i="${i}" data-k="${k}"${a != null ? " disabled" : ""} style="${a != null && k === ok ? "background:var(--good-soft);border-color:var(--good)" : a === k ? "background:var(--crit-soft);border-color:var(--crit)" : ""}">${o}</button>`).join("")}</div>${a != null ? `<div class="fb ${a === ok ? "ok" : "bad"}"><b>${a === ok ? "Correcto." : "No."}</b> ${ex}</div>` : ""}</div>`;
+    }).join("");
+    const n = Object.keys(mans).length, k = Object.entries(mans).filter(([i, a]) => MOD[i][1] === a).length;
+    $("#modScore").textContent = `${k} de ${n} correctas`;
+  }
+  $("#modList").addEventListener("click", e => { const b = e.target.closest("[data-k]"); if (!b) return; mans[+b.dataset.i] = +b.dataset.k; mod(); });
+  mod();
+};
+
+/* ================= UNIDAD 4 ================= */
+const INV_DEF = [
+  ["Transitabilidad Av. Los Libertadores", "PI", 12800000, 8960000, 58, "NA"],
+  ["Compactadora de residuos sólidos", "IOARR", 1450000, 1450000, 100, "Sí"],
+  ["Agua y saneamiento C. P. Santa Rosa", "PI", 6300000, 6180000, 100, "No"],
+];
+inits["unidad-4"] = () => {
+  const PH = [
+    ["Programación multianual", "OPMI", "La OPMI elabora el diagnóstico de brechas y el Programa Multianual de Inversiones (PMI) a tres años, con criterios de priorización vinculados al PEI."],
+    ["Formulación y evaluación", "UF", "La UF formula la ficha técnica o el estudio de preinversión y declara la viabilidad. Una IOARR solo requiere su registro en el banco de inversiones. Ejecutar sin viabilidad rompe el ciclo."],
+    ["Ejecución", "UEI", "La UEI elabora el expediente técnico, contrata y ejecuta. Se hace seguimiento físico y financiero; los cambios se registran antes de ejecutarse."],
+    ["Funcionamiento", "Operador", "El servicio opera con gasto corriente para personal, insumos y mantenimiento. Sin ese presupuesto, la inversión concluida no presta el servicio. Se hace evaluación ex post."],
+  ];
+  let ph = 0;
+  function drawPh() {
+    $("#invFlow").innerHTML = PH.map(([a, b], i) => `<button class="st" aria-pressed="${i === ph}" data-i="${i}"><b>${i + 1}. ${a}</b><span>${b}</span></button>`).join("");
+    $("#invDetail").innerHTML = `<b>${PH[ph][0]}.</b> ${PH[ph][2]}`;
+    $$("#invFlow .st").forEach(b => b.addEventListener("click", () => { ph = +b.dataset.i; drawPh(); }));
+  }
+  drawPh();
+
+  // físico vs financiero
+  let rows = store.get("pip-inv", null) || INV_DEF.map(r => r.slice());
+  const tb = $("#invTable tbody");
+  const ch = new Chart3D($("#invStage"), { R: 15.5, phi: 1.1, theta: 0.55, target: [0, 2.0, 0] });
+  function table() {
+    tb.innerHTML = rows.map((r, i) => `<tr data-i="${i}"><td class="mono">I${i + 1}</td>
+      <td><input type="text" data-k="0" value="${esc(r[0])}" style="min-width:170px" aria-label="Nombre de la inversión"></td>
+      <td><select data-k="1" aria-label="Tipo">${["PI", "IOARR"].map(o => `<option${o === r[1] ? " selected" : ""}>${o}</option>`).join("")}</select></td>
+      <td class="r"><input type="number" data-k="2" value="${r[2]}" min="0" step="1000" style="width:110px" aria-label="Costo actualizado"></td>
+      <td class="r"><input type="number" data-k="3" value="${r[3]}" min="0" step="1000" style="width:110px" aria-label="Devengado acumulado"></td>
+      <td class="r"><input type="number" data-k="4" value="${r[4]}" min="0" max="100" step="1" style="width:70px" aria-label="Avance físico"></td>
+      <td class="r num" data-o="fin"></td>
+      <td><select data-k="5" aria-label="Opera con O&M">${[["NA", "En ejecución"], ["Sí", "Sí"], ["No", "No"]].map(([v, t]) => `<option value="${v}"${v === r[5] ? " selected" : ""}>${t}</option>`).join("")}</select></td>
+      <td><button class="x" data-del="${i}" aria-label="Quitar inversión">×</button></td></tr>`).join("");
+    draw();
+  }
+  tb.addEventListener("input", e => { const tr = e.target.closest("tr"); if (!tr) return; const i = +tr.dataset.i, k = +e.target.dataset.k; rows[i][k] = (k >= 2 && k <= 4) ? (parseFloat(e.target.value) || 0) : e.target.value; save(); draw(); });
+  tb.addEventListener("click", e => { const b = e.target.closest("[data-del]"); if (!b) return; rows.splice(+b.dataset.del, 1); save(); table(); });
+  $("#invAdd").addEventListener("click", () => { rows.push(["Nueva inversión", "PI", 1000000, 0, 0, "NA"]); save(); table(); });
+  $("#invReset").addEventListener("click", () => { rows = INV_DEF.map(r => r.slice()); save(); table(); });
+  function save() { store.set("pip-inv", rows); }
+  function diag(r) {
+    const fin = r[2] ? r[3] / r[2] * 100 : 0, fis = r[4], gap = fis - fin, out = [];
+    if (gap < -5) out.push(["crit", `Se pagó más de lo construido (${fmt(-gap)} puntos). Revisa adelantos sin amortizar y valorizaciones.`]);
+    else if (gap > 5) out.push(["warn", `La obra avanza más que los pagos (${fmt(gap)} puntos). Posibles valorizaciones pendientes con el contratista.`]);
+    if (fis >= 99 && r[5] === "No") out.push(["crit", "Concluida, pero sin presupuesto de operación y mantenimiento: no genera valor público."]);
+    if (fis >= 99 && r[5] === "Sí") out.push(["good", "Concluida y en funcionamiento con su O&M. Verifica sus indicadores de servicio."]);
+    if (fis < 99 && r[5] !== "NA") out.push(["warn", "Aún no concluye: el funcionamiento se evalúa al terminar la ejecución."]);
+    if (!out.length) out.push(["good", "Avance físico y financiero coherentes."]);
+    return { fin, out };
+  }
+  function draw() {
+    $$("tr[data-i]", tb).forEach(tr => { const r = rows[+tr.dataset.i]; $("[data-o=fin]", tr).textContent = pct(r[2] ? r[3] / r[2] : 0, 0); });
+    $("#invDiag").innerHTML = rows.length ? rows.map((r, i) => { const d = diag(r); return `<div class="mini"><b>I${i + 1} · ${esc(r[0])}</b>${d.out.map(([c, t]) => `<p style="color:var(--ink)"><span class="tag" style="background:var(--${c}-soft);color:var(--${c});margin-right:6px">${c === "crit" ? "Alerta" : c === "warn" ? "Revisar" : "Bien"}</span>${t}</p>`).join("")}</div>`; }).join("") : `<p class="note">Agrega una inversión de tu entidad.</p>`;
+    if (!ch.ok) return;
+    ch.begin(); const n = Math.max(rows.length, 1); floor(ch, Math.max(8, n * 3.1 + 1), 4.4);
+    rows.forEach((r, i) => {
+      const x = (i - (n - 1) / 2) * 3.1, fin = r[2] ? r[3] / r[2] : 0;
+      ch.bar("f" + i, { x: x - 0.55, w: 0.95, d: 0.95, h: r[4] / 100 * 4.5, color: css("--teal"), label: fmt(r[4]) + " %", lsize: 0.34 });
+      ch.bar("n" + i, { x: x + 0.55, w: 0.95, d: 0.95, h: Math.min(fin, 1.2) * 4.5, color: css("--accent"), label: pct(fin, 0), lsize: 0.34 });
+      if (r[4] >= 99 && r[5] !== "NA") sphere(ch, x, 5.4, 0, 0.32, r[5] === "Sí" ? css("--good") : css("--crit"));
+      label3(ch, "I" + (i + 1), x, 0.05, 1.45, { size: 0.42, color: css("--ink") });
+    });
+    ch.end();
+  }
+  table(); onRender(draw);
+
+  // recomendaciones
+  const RF = ["rcHall", "rcRec", "rcResp", "rcPlazo", "rcNorma"];
+  const RX = { rcHall: "El 40 % del devengado de 2025 se concentró entre octubre y diciembre.", rcRec: "Programar el PAC y la PCA por trimestres para reducir la concentración del devengado al cierre, con metas de certificación por área usuaria.", rcResp: "Gerencia Municipal con Logística y la Oficina de Presupuesto", rcPlazo: "I trimestre de 2027", rcNorma: "DL 1440 (PCA) y Ley 32069" };
+  const dr = store.get("pip-rcdraft", null);
+  RF.forEach(id => $("#" + id).value = dr ? (dr[id] || "") : RX[id]);
+  let list = store.get("pip-recs", []);
+  const words = s => new Set(s.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "").split(/[^a-z0-9]+/).filter(w => w.length > 4).map(w => w.slice(0, 6)));
+  function rc() {
+    const v = Object.fromEntries(RF.map(id => [id, $("#" + id).value.trim()]));
+    store.set("pip-rcdraft", v);
+    const derog = /30225|28411|27293/.test(v.rcNorma);
+    const fw = (v.rcRec.split(/\s+/)[0] || "").toLowerCase().normalize("NFD").replace(/[̀-ͯ]/g, "");
+    const wh = words(v.rcHall), wr = words(v.rcRec), shared = [...wr].filter(w => wh.has(w)).length;
+    const C = [
+      [/\d/.test(v.rcHall), "El hallazgo trae un dato (cifra o porcentaje)."],
+      [/(ar|er|ir)$/.test(fw) && v.rcRec.length > 25, "La recomendación empieza con una acción concreta (verbo en infinitivo)."],
+      [shared > 0, "La recomendación responde al hallazgo (comparten el tema)."],
+      [v.rcResp.length > 3 && !/^(todos|la entidad|el estado|nadie)$/i.test(v.rcResp), "Tiene un responsable concreto (cargo u oficina)."],
+      [/\d|trimestre|semestre|mes|año|día|semana|inmediat/i.test(v.rcPlazo), "Tiene un plazo verificable."],
+      [!derog && /1440|32513|1252|32069|1436|1439|27785|directiva|reglamento/i.test(v.rcNorma), derog ? "Cita una norma derogada: usa la vigente (Ley 32069, DL 1440, DL 1252)." : "Cita una norma vigente que la sustenta."],
+    ];
+    const ok = C.filter(c => c[0]).length;
+    $("#rcChecks").innerHTML = C.map(([b, t]) => `<div class="chk ${b ? "ok" : "no"}"><i>${b ? "✓" : ""}</i><span>${t}</span></div>`).join("");
+    $("#rcScore").textContent = ok + " de 6"; $("#rcBar").style.width = (ok / 6 * 100) + "%"; $("#rcBar").style.background = ok === 6 ? "var(--good)" : "var(--accent)";
+    return { v, ok };
+  }
+  function rlist() {
+    $("#rcCount").textContent = `(${list.length} de 5)`;
+    $("#rcList").innerHTML = list.length ? list.map((r, i) => `<div class="mini" style="flex-direction:row;gap:10px;align-items:flex-start"><span class="mono" style="font-weight:700;color:var(--accent-text)">${i + 1}</span><div style="flex:1;min-width:0"><b style="font-size:14.5px">${esc(r.rcRec)}</b><p>Hallazgo: ${esc(r.rcHall)} · Responsable: ${esc(r.rcResp)} · Plazo: ${esc(r.rcPlazo)} · Norma: ${esc(r.rcNorma)}</p></div><button class="x" data-rm="${i}" aria-label="Quitar recomendación">×</button></div>`).join("") : `<p class="note">Aún no agregas recomendaciones. El informe necesita cinco.</p>`;
+  }
+  RF.forEach(id => $("#" + id).addEventListener("input", rc));
+  $("#rcEx").addEventListener("click", () => { RF.forEach(id => $("#" + id).value = RX[id]); rc(); });
+  $("#rcClear").addEventListener("click", () => { RF.forEach(id => $("#" + id).value = ""); rc(); $("#rcHall").focus(); });
+  $("#rcAdd").addEventListener("click", () => {
+    const { v, ok } = rc(), msg = $("#rcMsg");
+    if (!v.rcRec) { msg.textContent = "Escribe la recomendación primero."; return; }
+    list.push(v); store.set("pip-recs", list); rlist();
+    msg.textContent = ok < 6 ? "Agregada. Aún le faltan elementos: revísala antes de entregar." : "Agregada.";
+    setTimeout(() => msg.textContent = "", 3500);
+  });
+  $("#rcList").addEventListener("click", e => { const b = e.target.closest("[data-rm]"); if (!b) return; list.splice(+b.dataset.rm, 1); store.set("pip-recs", list); rlist(); });
+  $("#rcCopy").addEventListener("click", () => {
+    const t = list.map((r, i) => `${i + 1}. ${r.rcRec}\n   Hallazgo: ${r.rcHall}\n   Responsable: ${r.rcResp}. Plazo: ${r.rcPlazo}. Norma: ${r.rcNorma}.`).join("\n\n");
+    const msg = $("#rcMsg");
+    try { navigator.clipboard.writeText(t).then(() => msg.textContent = "Lista copiada.", () => msg.textContent = "No se pudo copiar; selecciona el texto de la lista."); } catch (e) { msg.textContent = "No se pudo copiar; selecciona el texto de la lista."; }
+    setTimeout(() => msg.textContent = "", 3500);
+  });
+  rc(); rlist();
+};
+</script>
+<script>
+"use strict";
+/* ================= TRABAJO INTEGRADOR ================= */
+const CK = [
+  ["1 · La entidad y sus sistemas", [["Elegir la entidad (no repetida entre equipos) y completar la ficha"], ["Ubicar los objetivos del PEI y las actividades del POI"], ["Describir cómo se articulan presupuesto, abastecimiento, tesorería, contabilidad y control", "unidad-1", "sim-valor"]]],
+  ["2 · Estructura del presupuesto", [["Descargar PIA y PIM por fuente y por genérica, 2023–2026", "unidad-2", "sim-mapa"], ["Descargar el gasto por categoría presupuestal y sus programas", "unidad-2"], ["Verificar la clasificación del gasto analizado", "unidad-2", "sim-clasifica"]]],
+  ["3 · Ciclo y ejecución", [["Calcular los siete indicadores para cada año", "unidad-3", "sim-embudo"], ["Graficar la ejecución mensual y explicar la concentración", "unidad-3", "sim-mensual"], ["Explicar la variación del PIA al PIM con sus modificaciones", "unidad-3", "sim-modif"]]],
+  ["4 · Calidad del gasto e inversión", [["Analizar un programa presupuestal con sus indicadores de desempeño", "unidad-4"], ["Contrastar avance físico y financiero de una inversión", "unidad-4", "sim-inversion"], ["Verificar si la inversión funciona y tiene presupuesto de O&M", "unidad-4", "sim-inversion"], ["Revisar los informes de control publicados sobre la entidad"]]],
+  ["5 · Conclusiones y propuestas", [["Redactar cinco recomendaciones con responsable, plazo y norma", "unidad-4", "sim-recom"], ["Concluir qué principios del gasto se cumplen o se vulneran", "unidad-1"]]],
+  ["Entrega", [["Informe de 15 a 20 páginas, APA 7.ª edición"], ["Plantilla de Excel con todas las fechas de consulta"], ["Video de 10 minutos con todos los integrantes"], ["Declaración de roles y del uso de IA"]]],
+];
+inits["integrador"] = () => {
+  let done = store.get("pip-ck", {});
+  const list = $("#ckList");
+  list.innerHTML = CK.map(([g, items], gi) => `<div><h4 style="font-size:15.5px;margin:6px 0 2px">${g}</h4>${items.map(([t, v, tg], ii) => {
+    const id = `ck-${gi}-${ii}`;
+    return `<div class="ck"><input type="checkbox" id="${id}" data-k="${id}"${done[id] ? " checked" : ""}><label for="${id}">${t}</label>${v ? `<button class="btn sm go" data-go="${v}"${tg ? ` data-target="${tg}"` : ""}>Practicar</button>` : ""}</div>`;
+  }).join("")}</div>`).join("");
+  list.addEventListener("change", e => { const k = e.target.dataset.k; if (!k) return; done[k] = e.target.checked; store.set("pip-ck", done); prog(); });
+  $("#ckReset").addEventListener("click", () => { done = {}; store.set("pip-ck", done); $$("#ckList input").forEach(i => i.checked = false); prog(); $("#ckResetMsg").textContent = "Avance reiniciado."; setTimeout(() => $("#ckResetMsg").textContent = "", 3000); });
+  function prog() {
+    let all = 0, ok = 0;
+    $("#progUnits").innerHTML = CK.map(([g, items], gi) => {
+      const n = items.length, k = items.filter((_, ii) => done[`ck-${gi}-${ii}`]).length; all += n; ok += k;
+      return `<div><div style="display:flex;justify-content:space-between;font-size:13px"><span>${g}</span><span class="mono">${k}/${n}</span></div><div class="meter"><i style="width:${k / n * 100}%;${k === n ? "background:var(--good)" : ""}"></i></div></div>`;
+    }).join("");
+    const f = ok / all, R = 34, C = 2 * Math.PI * R;
+    $("#ringAll").innerHTML = `<circle cx="42" cy="42" r="${R}" style="fill:none;stroke:var(--surface-2);stroke-width:9"/><circle cx="42" cy="42" r="${R}" transform="rotate(-90 42 42)" style="fill:none;stroke:${f === 1 ? "var(--good)" : "var(--accent)"};stroke-width:9;stroke-linecap:round;stroke-dasharray:${C * f} ${C}"/><text x="42" y="47" text-anchor="middle" style="font-family:var(--font-mono);font-weight:600;font-size:16px;fill:var(--ink)">${Math.round(f * 100)}%</text>`;
+  }
+  prog();
+  const RB = [["Rigor y trazabilidad de los datos", 20], ["Análisis del presupuesto y la ejecución", 25], ["Calidad del gasto e inversión", 20], ["Fundamento normativo", 15], ["Conclusiones y recomendaciones", 10], ["Trabajo colaborativo y exposición", 10]];
+  $("#rubricBars").innerHTML = RB.map(([t, w]) => `<div><div style="display:flex;justify-content:space-between;font-size:13.5px"><span>${t}</span><span class="mono">${w} %</span></div><div class="meter"><i style="width:${w * 4}%"></i></div></div>`).join("");
+  const ER = [
+    ["Leer el avance financiero como desempeño", "Ejecutar 80 % del PIM con 54 % de cobertura no es buen desempeño. Cruza la ejecución con productos y resultados."],
+    ["Comparar 2026 con años cerrados", "El avance de 2026 es parcial: compáralo con lo esperado a la fecha de consulta, no con un año completo."],
+    ["Confundir baja dependencia de RO con autonomía", "Si el resto es canon o FONCOMUN, la entidad depende de recursos volátiles y con destino fijado por ley."],
+    ["Mirar la inversión solo por lo devengado", "Contrasta el avance físico y verifica si la inversión concluida funciona con su presupuesto de operación."],
+    ["Citar normas derogadas o sin relación", "Usa la Ley 32069 (no la 30225) y relaciona cada norma con un hallazgo concreto."],
+    ["Recomendaciones genéricas", "“Mejorar la gestión” no se califica. Cada recomendación necesita hallazgo, responsable, plazo y norma."],
+  ];
+  $("#errores").innerHTML = ER.map(([t, d]) => `<div class="mini"><h4>${t}</h4><p>${d}</p></div>`).join("");
+};
+
+/* ================= AUTOEVALUACIÓN ================= */
+const QZ = [
+  { u: 1, q: "Una municipalidad ejecutó el 98 % de su presupuesto en una losa deportiva con deficiencias constructivas, sin mantenimiento y que la población no usa. ¿Qué es correcto?", o: ["Ejecutó gasto presupuestal, pero no gasto efectivo ni valor público.", "Generó valor público porque ejecutó casi todo su presupuesto.", "Debe pedir una auditoría para justificar su alta ejecución.", "Cumplió estándares de calidad al invertir en infraestructura deportiva."], e: "Ejecutar no es generar valor: la obra no presta el servicio que justificó el gasto." },
+  { u: 1, q: "Gobierno regional con S/ 1 200 M (+18 %): 22 % de ejecución al I trimestre (meta 30 %) y 60 % de proyectos sin iniciar su contratación. ¿Qué alternativa mejora la ejecución?", o: ["Articular planeamiento, presupuesto y abastecimiento.", "Sancionar a las áreas que no iniciaron sus procesos.", "Transferir los recursos no ejecutados al MEF.", "Contratar consultores para ejecutar los proyectos."], e: "Ataca el cuello de botella: la falta de coordinación entre sistemas." },
+  { u: 1, q: "Gobierno regional con canon petrolero: POI sin coherencia con el PESEM, canon en gasto corriente no previsto y control solo al final. ¿Qué propones?", o: ["Un mecanismo de articulación entre planeamiento, presupuesto y control para reprogramar.", "Pedir a la Contraloría una auditoría a todos los proyectos.", "Transferir el canon no ejecutado al MEF.", "Contratar consultores externos."], e: "Ataca la desconexión plan–presupuesto–control y permite reprogramar con coherencia." },
+  { u: 1, q: "El canon, el FONCOMUN y los impuestos municipales pertenecen a la fuente de financiamiento…", o: ["Recursos Determinados", "Recursos Ordinarios", "Recursos Directamente Recaudados", "Donaciones y Transferencias"], e: "Son recursos determinados: su destino lo fija la ley y su monto puede variar mucho." },
+  { u: 2, q: "Surge una necesidad no prevista y el área usuaria quiere usar el saldo de otra partida. ¿Qué es correcto?", o: ["Primero se verifican la norma permanente, la ley anual y el procedimiento.", "El saldo disponible permite financiar cualquier necesidad.", "La decisión corresponde solo al área usuaria.", "La Ley de Presupuesto 2026 sustituye por completo al DL 1440."], e: "Especialidad cualitativa: el crédito tiene una finalidad; el DL 1440 y la Ley 32513 rigen juntos." },
+  { u: 2, q: "Una municipalidad compra equipos informáticos para un centro de atención ciudadana. ¿Cómo se clasifican?", o: ["Adquisición de activos no financieros (2.6).", "Bienes y servicios (2.3), porque apoyan una actividad.", "Personal y obligaciones sociales (2.1).", "Cualquier clasificador, si hay crédito."], e: "El equipamiento duradero es un activo: genérica 2.6." },
+  { u: 2, q: "Valle Verde: requerimientos sin relación con prioridades, equipos con partidas de bienes y servicios y reasignaciones sin sustento. ¿Qué medida previene nuevas inconsistencias?", o: ["Revisión previa de finalidad, norma, roles y clasificación.", "Aprobar lo que tenga saldo y revisar cada mes.", "Que solo Presupuesto apruebe todo.", "Mantener el flujo y regularizar al cierre."], e: "Previene en lugar de corregir: verifica antes de autorizar." },
+  { u: 2, q: "Campaña de salud del POI para 20 000 personas: el PIA la financia en parte y el PAC no incluye pruebas ni transporte. ¿Qué medida restablece la articulación?", o: ["Revisar meta y costo, verificar el PIM e incorporar las compras al PAC.", "Mantener la meta e iniciar compras antes de revisar el presupuesto.", "Reducir la meta física hasta igualar el presupuesto.", "Priorizar avance financiero con otras actividades."], e: "Restablece la cadena POI–PIM–PAC." },
+  { u: 2, q: "Programa de salud: PIM S/ 25 M, devengado S/ 20 M (80 %), cobertura 54 % y resultado sin mejora. ¿Cuál es la interpretación adecuada?", o: ["Relacionar ejecución con cobertura, calidad y causas del bajo resultado.", "Desempeño favorable: ejecutó el 80 % del PIM.", "El aumento del PIA al PIM confirma que los recursos bastan.", "La baja cobertura prueba errores en Consulta Amigable."], e: "El avance financiero solo no mide desempeño." },
+  { u: 2, q: "Sierra Central: 76 % de avance financiero pero 48 % de población atendida; el PAC no incluyó suplementos y tesorería retrasó pagos. ¿Qué acción mejora la ejecución y los resultados?", o: ["Reprogramar metas, compras, caja y personal y monitorear juntos.", "Acelerar el devengado y revisar la cobertura al cierre.", "Reducir las metas del POI hasta el avance actual.", "Transferir recursos a actividades con más ejecución."], e: "Integra la ejecución física, la financiera y los resultados." },
+  { u: 3, q: "Una municipalidad pide 40 % más en servicios generales sin costos unitarios ni vínculo con el POI. ¿Qué es correcto?", o: ["Es incorrecto: formular exige evidencia, costos y la cadena de valor del POI.", "Es correcto: el MEF debe ampliar el techo.", "El gasto administrativo prevalece sobre los límites fiscales.", "La autonomía municipal permite ignorar la APM."], e: "La formulación se basa en evidencia y costos, no en incrementos inerciales." },
+  { u: 3, q: "Un ministerio con PIA inercial enfrenta una emergencia de S/ 40 M. ¿Cómo gestionar la modificación?", o: ["Analizar saldos: anulaciones, habilitaciones y saldos de balance no RO.", "Pedir crédito suplementario dando por hecho su aprobación.", "Congelar contratos y forzar transferencias.", "Postergar la emergencia hasta el próximo PIA."], e: "Se trabaja en el nivel funcional programático y con saldos de fuentes distintas a RO." },
+  { u: 3, q: "El alcalde ordena pagar a un proveedor de limpieza sin compromiso ni devengo registrados. ¿Qué es correcto?", o: ["Debió certificarse, comprometerse y devengarse antes de pagar.", "Se prioriza el servicio y se regulariza después.", "El alcalde puede aprobar gastos urgentes sin esas etapas.", "Bastaba registrar compromiso y pago."], e: "Etapas del gasto del DL 1440: certificación, compromiso, devengado y pago." },
+  { u: 3, q: "Con baja ejecución de inversiones con canon, se propone pasar el canon a vehículos y mobiliario para mostrar alta ejecución. ¿Qué corresponde?", o: ["Dar continuidad a las inversiones y acelerar procesos, sin desviar el canon.", "Transferir ya: así el dinero no caduca.", "Cambiar la categoría a acción central.", "Cancelar las inversiones y devolver el canon."], e: "El canon tiene destino fijado por ley; se prioriza la continuidad de las inversiones." },
+  { u: 3, q: "A tres meses del cierre: 50 órdenes comprometidas sin devengar y tesorería que confunde caja con presupuesto. ¿Cómo revertir la subejecución?", o: ["Devengar con informes, capacitar a tesorería y dar continuidad a las obras.", "Caducar obras y comprar bienes antes del cierre.", "Pagar facturas sin registrar el devengado.", "Congelar compromisos y enfocarse en recaudar."], e: "Ordena el gasto sin saltar etapas ni desviar la finalidad." },
+  { u: 3, q: "Incorporar al presupuesto el saldo de balance del año anterior es una modificación…", o: ["En el nivel institucional: crédito suplementario.", "En el nivel funcional programático: habilitación.", "Una transferencia de partidas.", "No es una modificación presupuestaria."], e: "Son mayores fondos que aumentan el total del pliego." },
+  { u: 3, q: "¿En qué etapa se reconoce la obligación de pago al recibir el bien o servicio?", o: ["Devengado", "Certificación", "Compromiso", "Pago"], e: "El devengado reconoce la obligación tras la conformidad de la entrega." },
+  { u: 4, q: "Un programa municipal entregó 1 000 laptops, pero no midió el rendimiento académico ni el uso de los equipos. ¿Qué es correcto?", o: ["Faltó evaluar resultados e impacto en el aprendizaje.", "La meta física es el indicador supremo de éxito.", "Evaluar impacto es caro; basta auditar la entrega.", "Debió evaluarse el proceso para sancionar proveedores."], e: "Producto entregado no es resultado logrado." },
+  { u: 4, q: "Cerca de elecciones se ordena construir un mercado sin viabilidad: “el perfil se hará durante la obra”. ¿Qué es correcto?", o: ["Detener, formular, declarar la viabilidad y luego ejecutar.", "La urgencia social justifica flexibilizar la viabilidad.", "La UEI puede priorizar la obra si hay presupuesto.", "Debió pasar directo a la fase de funcionamiento."], e: "Respeta el ciclo de Invierte.pe." },
+  { u: 4, q: "20 postas rurales concluidas: 95 % de ejecución financiera, pero 60 % cerradas a los seis meses y sin gasto corriente para personal. ¿Qué propones?", o: ["Gasto corriente, mantenimiento e indicadores de salud.", "Demoler las postas dañadas y construir un hospital.", "Transferir las postas a los municipios.", "Esperar el próximo año fiscal."], e: "Sin operación y mantenimiento la inversión no presta el servicio." },
+  { u: 4, q: "El alcalde ordena a la UEI reponer equipos médicos sin ficha técnica ni registro de la IOARR. ¿Qué es correcto?", o: ["Detener: la UF formula y registra; luego ejecuta la UEI.", "La urgencia sanitaria permite ejecutar si hay presupuesto.", "La UEI puede formular y ejecutar.", "La ficha técnica debía elaborarla la OPMI."], e: "Roles de Invierte.pe: la UF formula la IOARR y la UEI ejecuta." },
+  { u: 4, q: "Un informe de control encuentra una planta de agua entregada sin personal ni insumos en el PIM. ¿Qué es correcto?", o: ["Falla la integración inversión–presupuesto: el activo se paraliza.", "La Contraloría solo verifica la obra según el expediente.", "El personal y los insumos los paga solo el Gobierno Nacional.", "El personal se contrata después; es un tema burocrático."], e: "Entregar un activo sin financiar su operación lo condena a la paralización." },
+  { u: 4, q: "IOARR financiada por el FIDT: compras sin expediente y UP no registradas antes de priorizar. ¿Cómo restablecer la secuencia?", o: ["Detener compras, registrar la IOARR y prever la operación.", "Seguir comprando y registrar la UP después.", "Transferir la ejecución a la municipalidad.", "Convertir el FIDT en gasto corriente."], e: "Restablece la secuencia de Invierte.pe y protege el cofinanciamiento." },
+  { u: 4, q: "En Invierte.pe, ¿quién formula y declara la viabilidad de un proyecto?", o: ["La Unidad Formuladora (UF)", "La OPMI", "La Unidad Ejecutora de Inversiones (UEI)", "La DGPP"], e: "La OPMI programa, la UF formula y declara viabilidad, la UEI ejecuta." },
+  { u: 4, q: "Reponer una compactadora de residuos que cumplió su vida útil es…", o: ["Una IOARR de reposición", "Un proyecto de inversión", "Gasto en bienes y servicios", "Una transferencia de partidas"], e: "La reposición de activos de una UP existente es una IOARR." },
+  { u: 4, q: "Un indicador de resultado mide…", o: ["Cambios en la población atendida", "Los recursos asignados", "Los bienes y servicios entregados", "El avance del devengado"], e: "Insumo → producto → resultado → impacto: el resultado es el cambio en la población." },
+];
+inits["quiz"] = () => {
+  let filter = "all", qs = [], cur = 0, res = [];
+  function start() { qs = shuffle(QZ.filter(q => filter === "all" || String(q.u) === filter)).map(q => ({ ...q, ord: shuffle(q.o.map((t, i) => ({ t, ok: i === 0 }))) })); cur = 0; res = []; render(); }
+  function bar() { $("#qbar").innerHTML = qs.map((_, i) => `<span class="${res[i] === true ? "ok" : res[i] === false ? "bad" : i === cur ? "cur" : ""}"></span>`).join(""); }
+  function render() {
+    bar(); const body = $("#quizBody");
+    if (cur >= qs.length) {
+      const ok = res.filter(Boolean).length, key = "pip-quiz-" + filter, best = Math.max(store.get(key, 0), ok); store.set(key, best);
+      const miss = [...new Set(qs.filter((q, i) => !res[i]).map(q => q.u))];
+      body.innerHTML = `<div style="display:flex;flex-direction:column;gap:12px"><h3 style="font-size:24px">${ok} de ${qs.length} correctas</h3><div class="meter"><i style="width:${ok / qs.length * 100}%;${ok === qs.length ? "background:var(--good)" : ""}"></i></div><p class="note">Tu mejor resultado en este bloque: ${best} de ${qs.length}.</p>${miss.length ? `<p>Repasa: ${miss.map(u => `<button class="btn sm" data-go="unidad-${u}">Unidad ${u}</button>`).join(" ")}</p>` : `<p class="insight"><b>Todo correcto.</b> Ya puedes aplicar estos criterios en tu trabajo integrador.</p>`}<div class="btns"><button class="btn primary" id="qAgain">Intentar de nuevo</button></div></div>`;
+      $("#qAgain").addEventListener("click", start); return;
+    }
+    const q = qs[cur];
+    body.innerHTML = `<div class="q"><div class="eyebrow">Pregunta ${cur + 1} de ${qs.length} · Unidad ${q.u}</div><h3 style="font-size:18px;font-family:var(--font-body);font-weight:600;line-height:1.4">${esc(q.q)}</h3><div class="opts">${q.ord.map((o, i) => `<button class="opt" data-i="${i}"><span class="l">${"ABCD"[i]}</span><span>${esc(o.t)}</span></button>`).join("")}</div><div id="qfb" aria-live="polite"></div></div>`;
+    $$(".opt", body).forEach(b => b.addEventListener("click", () => {
+      const o = q.ord[+b.dataset.i]; res[cur] = o.ok;
+      $$(".opt", body).forEach((x, i) => { x.disabled = true; if (q.ord[i].ok) x.classList.add("ok"); });
+      if (!o.ok) b.classList.add("bad");
+      $("#qfb").innerHTML = `<div class="fb ${o.ok ? "ok" : "bad"}"><b>${o.ok ? "Correcto." : "No es la mejor opción."}</b> ${esc(q.e)}</div><div class="btns" style="margin-top:10px"><button class="btn primary" id="qNext">${cur + 1 < qs.length ? "Siguiente" : "Ver resultado"}</button></div>`;
+      $("#qNext").addEventListener("click", () => { cur++; render(); }); $("#qNext").focus(); bar();
+    }));
+  }
+  $$("#quizFilter button").forEach(b => b.addEventListener("click", () => { $$("#quizFilter button").forEach(x => x.setAttribute("aria-pressed", x === b)); filter = b.dataset.v; start(); }));
+  start();
+};
+
+/* ================= GLOSARIO ================= */
+const GL = [
+  ["Acciones centrales", 2, "Categoría presupuestal de la gestión administrativa que apoya a toda la entidad."],
+  ["Anulación y habilitación", 3, "Modificación en el nivel funcional programático: reduce un crédito y aumenta otro sin cambiar el total del pliego."],
+  ["APM", 3, "Asignación Presupuestaria Multianual: techo máximo de gasto por pliego para tres años, que fija el MEF."],
+  ["APNOP", 2, "Asignaciones presupuestarias que no resultan en productos."],
+  ["Brecha de infraestructura o acceso", 4, "Diferencia entre la oferta disponible de un servicio y la demanda; Invierte.pe prioriza inversiones que la cierran."],
+  ["Calidad del gasto", 4, "Uso de los recursos con eficiencia, eficacia, economía y sostenibilidad."],
+  ["Categoría presupuestal", 2, "Clasificación programática del gasto: programa presupuestal, acciones centrales o APNOP."],
+  ["Certificación", 3, "Acto que garantiza crédito disponible y libre de afectación antes de comprometer."],
+  ["Compromiso", 3, "Acto que formaliza una obligación de pago con un tercero mediante contrato u orden."],
+  ["Consulta Amigable", 2, "Herramienta del MEF para consultar PIA, PIM y ejecución por entidad, fuente, genérica, categoría y mes."],
+  ["Crédito suplementario", 3, "Modificación en el nivel institucional que incorpora mayores fondos al pliego."],
+  ["Devengado", 3, "Reconocimiento de la obligación de pago tras la conformidad de la entrega."],
+  ["DGPP", 2, "Dirección General de Presupuesto Público del MEF, ente rector del sistema."],
+  ["DL 1440", 2, "Decreto Legislativo del Sistema Nacional de Presupuesto Público."],
+  ["Donaciones y Transferencias", 1, "Fuente de financiamiento con recursos que vienen de otras entidades o de donantes."],
+  ["Especialidad cualitativa", 1, "Principio: los créditos se usan solo para la finalidad autorizada."],
+  ["FIDT", 4, "Fondo Invierte para el Desarrollo Territorial: cofinancia inversiones en gobiernos subnacionales."],
+  ["FONCOMUN", 1, "Fondo de Compensación Municipal; forma parte de los recursos determinados de las municipalidades."],
+  ["Fuente de financiamiento", 1, "Origen de los recursos: RO, RDR, ROOC, DyT o RD."],
+  ["Funcionamiento", 4, "Fase de Invierte.pe en la que la inversión presta el servicio con gasto de operación y mantenimiento."],
+  ["Gasto efectivo", 1, "Gasto que se convierte en bienes y servicios que la población usa y valora."],
+  ["Genérica de gasto", 2, "Primer nivel del clasificador económico del gasto: de 2.1 a 2.8."],
+  ["Girado", 3, "Monto pagado; extingue la obligación devengada."],
+  ["Indicador de desempeño", 4, "Mide productos o resultados de un programa presupuestal."],
+  ["Invierte.pe", 4, "Sistema Nacional de Programación Multianual y Gestión de Inversiones (DL 1252)."],
+  ["IOARR", 4, "Inversión de optimización, ampliación marginal, reposición o rehabilitación; no requiere declaración de viabilidad."],
+  ["Ley 32513", 2, "Ley de Presupuesto del Sector Público para el año fiscal 2026."],
+  ["MMM", 3, "Marco Macroeconómico Multianual: proyecciones y reglas fiscales del país."],
+  ["OPMI", 4, "Oficina de Programación Multianual de Inversiones: programa la cartera y hace seguimiento."],
+  ["PAC", 3, "Plan Anual de Contrataciones de la entidad."],
+  ["PCA", 3, "Programación de Compromisos Anual: tope de compromisos del año, compatible con los ingresos."],
+  ["PEI", 1, "Plan Estratégico Institucional: objetivos y acciones estratégicas de la entidad."],
+  ["PIA", 3, "Presupuesto Institucional de Apertura, aprobado por la ley anual."],
+  ["PIM", 3, "Presupuesto Institucional Modificado: el PIA más las modificaciones del año."],
+  ["Pliego", 2, "Entidad con crédito presupuestario aprobado en la ley anual."],
+  ["POI", 1, "Plan Operativo Institucional: actividades y metas anuales vinculadas al PEI."],
+  ["Programa presupuestal", 2, "Categoría que agrupa productos y actividades para lograr un resultado específico en la población."],
+  ["Presupuesto por Resultados (PpR)", 2, "Estrategia que vincula la asignación de recursos con productos y resultados medibles."],
+  ["Recursos Determinados (RD)", 1, "Canon, sobrecanon, regalías, FONCOMUN e impuestos municipales, entre otros."],
+  ["Recursos Directamente Recaudados (RDR)", 1, "Ingresos que genera la propia entidad: tasas, derechos, venta de servicios."],
+  ["Recursos Ordinarios (RO)", 1, "Recursos de la recaudación tributaria nacional que asigna el Tesoro."],
+  ["ROOC", 1, "Recursos por Operaciones Oficiales de Crédito: endeudamiento interno y externo."],
+  ["Saldo de balance", 3, "Recursos no ejecutados al cierre que pueden incorporarse al año siguiente."],
+  ["Transferencia de partidas", 3, "Modificación en el nivel institucional que traslada créditos entre pliegos."],
+  ["UEI", 4, "Unidad Ejecutora de Inversiones: elabora el expediente técnico y ejecuta."],
+  ["UF", 4, "Unidad Formuladora: formula y evalúa las inversiones y declara la viabilidad."],
+  ["Unidad ejecutora", 2, "Nivel descentralizado de un pliego que ejecuta ingresos y gastos."],
+  ["Unidad productora (UP)", 4, "Conjunto de recursos que presta un servicio público; una IOARR interviene una UP existente."],
+  ["Valor público", 1, "Cambios valorados por la población: resultados, servicios de calidad y confianza en el Estado."],
+];
+inits["glosario"] = () => {
+  const q = $("#glq"), n = s => s.toLowerCase().normalize("NFD").replace(/[̀-ͯ]/g, "");
+  function draw() {
+    const t = n(q.value.trim());
+    const L = GL.filter(([a, , d]) => !t || n(a).includes(t) || n(d).includes(t));
+    $("#glList").innerHTML = L.length ? L.map(([a, u, d]) => `<div class="mini"><div style="display:flex;justify-content:space-between;gap:8px;align-items:baseline"><b>${a}</b><button class="tag" data-go="unidad-${u}" style="border:0;cursor:pointer">U${u}</button></div><p>${d}</p></div>`).join("") : `<p class="note">No hay términos que coincidan con “${esc(q.value)}”.</p>`;
+  }
+  q.addEventListener("input", draw); draw();
+};
+
+show();
+</script>
+
+</body></html>
